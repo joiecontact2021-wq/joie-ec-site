@@ -33,7 +33,7 @@ export default function PrivacyPage() {
           <p>
             個人情報の取り扱いに関するお問い合わせは、以下の連絡先までお願いいたします。<br/>
             joie (ジョワ)<br/>
-            メール: contact@example.com
+            メール: joiecontact2021@gmail.com
           </p>
         </section>
       </div>

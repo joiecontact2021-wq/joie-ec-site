@@ -8,11 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['var(--font-cormorant)', 'serif'], // 英語のおしゃれフォント
+        sans: ['var(--font-noto)', 'sans-serif'], // 日本語のきれいなフォント
+      },
       colors: {
         joie: {
-          bg: '#Fdfcf8', // 背景のクリーム色
-          text: '#5c4b43', // ロゴのようなダークブラウン
-          accent: '#8c7b73', // 薄めのブラウン
+          bg: '#FDFCF8',
+          text: '#4A4A4A',
+          accent: '#A69B95',
         }
       },
     },
