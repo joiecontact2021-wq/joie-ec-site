@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['var(--font-cormorant)', 'serif'], // 英語のおしゃれフォント
-        sans: ['var(--font-noto)', 'sans-serif'], // 日本語のきれいなフォント
+        serif: ['var(--font-cormorant)', 'serif'],
+        sans: ['var(--font-noto)', 'sans-serif'],
       },
       colors: {
         joie: {
