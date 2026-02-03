@@ -9,15 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['var(--font-cormorant)', 'serif'],
-        sans: ['var(--font-noto)', 'sans-serif'],
+        serif: ["var(--font-cormorant)", "serif"],
+        sans: ["var(--font-noto)", "sans-serif"],
       },
       colors: {
-        joie: {
-          bg: '#FDFCF8',
-          text: '#4A4A4A',
-          accent: '#A69B95',
-        }
+        "joie-bg": "var(--joie-bg)",
+        "joie-text": "var(--joie-text)",
+        "joie-accent": "var(--joie-accent)",
+        "joie-mist": "var(--joie-mist)",
+        "joie-ink": "var(--joie-ink)",
       },
     },
   },

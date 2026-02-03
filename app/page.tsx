@@ -1,72 +1,137 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ProductGrid } from "@/components/store/ProductGrid";
+import { getActiveProducts } from "@/lib/products";
+import { formatJPY } from "@/lib/utils";
 
-export default function Home() {
-  const dummyProducts = [
-    { id: 1, name: "Moisture Shampoo", price: 3800, image: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=2070&auto=format&fit=crop" },
-    { id: 2, name: "Treatment Oil", price: 4200, image: "https://images.unsplash.com/photo-1608248597279-f99d160bfbc8?q=80&w=2670&auto=format&fit=crop" },
-    { id: 3, name: "Styling Balm", price: 2800, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=2574&auto=format&fit=crop" },
-    { id: 4, name: "Scalp Essence", price: 3500, image: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=2680&auto=format&fit=crop" },
-  ];
+export default async function Home() {
+  const products = await getActiveProducts();
+  const highlight = products.slice(0, 2);
+  const usingFallback = products.some((product) => product.id.startsWith("sample-"));
 
   return (
-    <div className="pb-32">
-      {/* メインビジュアル */}
-      <section className="relative w-full h-[85vh] overflow-hidden mb-24">
-        <Image 
-          src="https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=2626&auto=format&fit=crop" 
-          alt="Salon Atmosphere"
-          fill
-          className="object-cover object-center opacity-90"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-serif tracking-widest mb-6 drop-shadow-sm">
-            Simple & Minimal
-          </h1>
-          <p className="text-sm md:text-base font-light tracking-[0.2em] opacity-90">
-            日々の生活に、小さな喜びを。
-          </p>
-        </div>
-      </section>
-
-      {/* コンセプト */}
-      <section className="max-w-2xl mx-auto text-center px-6 mb-32 space-y-8">
-        <h2 className="text-2xl font-serif tracking-widest text-gray-800">Concept</h2>
-        <p className="text-sm leading-loose text-gray-500 font-light">
-          髪本来の美しさを引き出すために。<br/>
-          余計なものは入れず、本当に必要な成分だけを厳選しました。<br/>
-          あなたの日常に寄り添う、シンプルで上質なケアを。
-        </p>
-      </section>
-
-      {/* 商品一覧 */}
-      <section className="max-w-6xl mx-auto px-6">
-        <h2 className="text-center text-3xl font-serif tracking-[0.2em] mb-16 text-gray-800">
-          PRODUCTS
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {dummyProducts.map((product) => (
-            <div key={product.id} className="group cursor-pointer">
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f5f5] mb-6">
-                <Image 
-                  src={product.image} 
-                  alt={product.name} 
-                  fill 
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-              </div>
-              <div className="text-center space-y-2">
-                <h3 className="text-base font-serif tracking-wide text-gray-800 group-hover:text-gray-500 transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-gray-400 tracking-widest">
-                  ¥{product.price.toLocaleString()}
-                </p>
-              </div>
+    <div className="space-y-24">
+      <section className="relative overflow-hidden rounded-[48px] border border-white/70 bg-white/60 p-8 shadow-[0_40px_120px_-80px_rgba(0,0,0,0.6)] md:p-16">
+        <div className="absolute left-0 top-0 h-72 w-72 -translate-x-1/3 -translate-y-1/3 rounded-full bg-joie-accent/20 blur-[80px]" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 translate-x-1/3 translate-y-1/3 rounded-full bg-joie-mist/80 blur-[120px]" />
+        <div className="relative grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-6">
+            <p className="text-[11px] uppercase tracking-[0.4em] text-joie-text/60 animate-fade-up">
+              Hair Care & Salon Store
+            </p>
+            <h1 className="text-4xl font-serif leading-tight text-joie-ink md:text-5xl animate-fade-up">
+              日常に、
+              <br />
+              ほどける艶と余白を。
+            </h1>
+            <p className="max-w-md text-sm leading-loose text-joie-text/70 animate-fade-up">
+              joie は大阪のプライベートサロンから生まれたヘアケアブランド。
+              毎日のケアが少しだけ心地よくなる、やさしい処方と香りを届けます。
+            </p>
+            <div className="flex flex-wrap gap-3 animate-fade-up">
+              <Link
+                href="#products"
+                className="rounded-full bg-joie-text px-6 py-3 text-xs uppercase tracking-[0.3em] text-white transition hover:opacity-80"
+              >
+                Shop Now
+              </Link>
+              <Link
+                href="#guide"
+                className="rounded-full border border-joie-text/20 px-6 py-3 text-xs uppercase tracking-[0.3em] text-joie-text/70 transition hover:border-joie-text"
+              >
+                Guide
+              </Link>
             </div>
-          ))}
+            <div className="flex flex-wrap gap-6 text-[11px] uppercase tracking-[0.3em] text-joie-text/50">
+              <span>Small Batch</span>
+              <span>Salon Quality</span>
+              <span>Made in Japan</span>
+            </div>
+          </div>
+
+          <div className="grid gap-6">
+            {highlight.map((product) => (
+              <div
+                key={product.id}
+                className="flex gap-4 rounded-3xl border border-white/80 bg-white/70 p-4 shadow-[0_20px_50px_-40px_rgba(0,0,0,0.6)]"
+              >
+                <div className="h-24 w-20 overflow-hidden rounded-2xl bg-joie-mist/40">
+                  {product.image_url ? (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : null}
+                </div>
+                <div className="flex-1">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-joie-text/50">Featured</p>
+                  <h3 className="text-sm font-serif text-joie-text">{product.name}</h3>
+                  <p className="text-xs text-joie-text/60">{formatJPY(product.price)}</p>
+                  <Link href={`/products/${product.slug}`} className="mt-2 inline-flex text-[10px] uppercase tracking-[0.3em] text-joie-text/50">
+                    View Detail
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
+
+      {usingFallback ? (
+        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900">
+          Supabase が未接続のため、デモ商品を表示しています。
+        </div>
+      ) : null}
+
+      <section id="about" className="grid gap-8 md:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-3xl border border-white/70 bg-white/70 p-8">
+          <p className="text-[11px] uppercase tracking-[0.4em] text-joie-text/50">Concept</p>
+          <h2 className="mt-4 text-2xl font-serif text-joie-ink">Simple, honest, gentle.</h2>
+        </div>
+        <div className="rounded-3xl border border-white/70 bg-white/70 p-8 text-sm leading-loose text-joie-text/70">
+          髪本来の美しさを引き出すために。余計なものは入れず、本当に必要な成分だけを厳選しました。
+          サロン帰りの軽やかな手触りを、毎日のケアで。
+        </div>
+      </section>
+
+      <section id="products" className="space-y-10">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.4em] text-joie-text/50">Products</p>
+            <h2 className="mt-3 text-3xl font-serif text-joie-ink">ラインナップ</h2>
+          </div>
+          <Link
+            href="/cart"
+            className="rounded-full border border-joie-text/20 px-5 py-2 text-[11px] uppercase tracking-[0.3em] text-joie-text/70 transition hover:border-joie-text"
+          >
+            View Cart
+          </Link>
+        </div>
+        <ProductGrid products={products} />
+      </section>
+
+      <section id="guide" className="grid gap-6 md:grid-cols-3">
+        {[
+          {
+            title: "配送について",
+            body: "全国配送に対応。決済完了後、3営業日以内に出荷します。",
+          },
+          {
+            title: "お支払い方法",
+            body: "クレジットカード決済（Visa / Master / Amex / JCB）。",
+          },
+          {
+            title: "サポート",
+            body: "商品に関するご相談はお問い合わせフォームからご連絡ください。",
+          },
+        ].map((item) => (
+          <div key={item.title} className="rounded-3xl border border-white/70 bg-white/70 p-6">
+            <p className="text-[11px] uppercase tracking-[0.4em] text-joie-text/50">Guide</p>
+            <h3 className="mt-3 text-lg font-serif text-joie-ink">{item.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-joie-text/70">{item.body}</p>
+          </div>
+        ))}
       </section>
     </div>
   );

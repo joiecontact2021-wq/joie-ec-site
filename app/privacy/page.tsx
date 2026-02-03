@@ -1,15 +1,15 @@
 export default function PrivacyPage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
-      <h1 className="text-2xl font-light text-center mb-12 tracking-widest">プライバシーポリシー</h1>
-      
-      <div className="space-y-8 text-sm leading-relaxed text-joie-text/90">
+    <div className="mx-auto max-w-3xl rounded-3xl border border-white/70 bg-white/70 p-10">
+      <h1 className="text-2xl font-serif text-center mb-12 tracking-widest">プライバシーポリシー</h1>
+
+      <div className="space-y-8 text-sm leading-relaxed text-joie-text/80">
         <section>
           <h2 className="font-bold text-base mb-2">1. 個人情報の利用目的</h2>
           <p>
-            当サロンは、お客様から収集した個人情報を以下の目的で利用いたします。<br/>
-            ・商品の発送および代金の請求<br/>
-            ・ご注文内容や配送方法などの連絡<br/>
+            当サロンは、お客様から収集した個人情報を以下の目的で利用いたします。<br />
+            ・商品の発送および代金の請求<br />
+            ・ご注文内容や配送方法などの連絡<br />
             ・当サロンのサービス向上、商品開発
           </p>
         </section>
@@ -31,8 +31,8 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-bold text-base mb-2">4. お問い合わせ</h2>
           <p>
-            個人情報の取り扱いに関するお問い合わせは、以下の連絡先までお願いいたします。<br/>
-            joie (ジョワ)<br/>
+            個人情報の取り扱いに関するお問い合わせは、以下の連絡先までお願いいたします。<br />
+            joie (ジョワ)<br />
             メール: joiecontact2021@gmail.com
           </p>
         </section>
