@@ -1,11 +1,11 @@
 export default function LegalPage() {
   return (
     <div className="space-y-6">
-      <nav className="text-[10px] tracking-[0.35em] text-joie-text/60">
+      <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">
         ホーム / 特定商取引法に基づく表記
       </nav>
       <div className="mx-auto max-w-3xl rounded-3xl border border-white/70 bg-white/70 p-6 sm:p-10">
-        <h1 className="mb-10 text-center text-2xl font-serif tracking-widest sm:mb-12">
+        <h1 className="font-ui mb-10 text-center text-2xl tracking-widest sm:mb-12">
           特定商取引法に基づく表記
         </h1>
 
