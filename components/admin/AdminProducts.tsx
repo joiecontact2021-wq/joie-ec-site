@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/lib/types";
 import { formatJPY } from "@/lib/utils";
 import { LogoutButton } from "@/components/admin/LogoutButton";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
 type Draft = {
   name: string;
@@ -33,6 +34,7 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,6 +56,48 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return;
+    if (file.type !== "image/jpeg") {
+      setError("JPEG画像のみアップロードできます。");
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const supabase = createBrowserSupabaseClient();
+      const safeName = file.name.replace(/\s+/g, "-");
+      const fileName = `${Date.now()}-${safeName}`;
+      const path = `products/${fileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(path, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+      if (!data?.publicUrl) {
+        throw new Error("画像URLの取得に失敗しました。");
+      }
+
+      setDraft((prev) => ({ ...prev, image_url: data.publicUrl }));
+      setMessage("画像をアップロードしました。");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "アップロードに失敗しました");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleCreate = async () => {
     setLoading(true);
@@ -172,7 +216,22 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50 md:col-span-2">
-            画像URL
+            商品画像 (JPEG)
+            <input
+              type="file"
+              accept="image/jpeg"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) handleImageUpload(file);
+              }}
+              className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
+            />
+            <p className="mt-2 text-[11px] tracking-[0.18em] text-joie-text/50">
+              JPEGのみ対応。アップロード後に自動で画像URLが反映されます。
+            </p>
+          </label>
+          <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50 md:col-span-2">
+            画像URL (自動入力)
             <input
               value={draft.image_url}
               onChange={(event) => setDraft((prev) => ({ ...prev, image_url: event.target.value }))}
@@ -213,12 +272,13 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
             公開する
           </label>
         </div>
+        {uploading ? <p className="mt-4 text-xs text-joie-text/60">画像をアップロード中...</p> : null}
         {error ? <p className="mt-4 text-xs text-red-600">{error}</p> : null}
         {message ? <p className="mt-4 text-xs text-emerald-700">{message}</p> : null}
         <button
           type="button"
           onClick={handleCreate}
-          disabled={loading}
+          disabled={loading || uploading}
           className="mt-6 rounded-full bg-joie-text px-6 py-3 text-xs uppercase tracking-[0.3em] text-white transition hover:opacity-80 disabled:opacity-60"
         >
           {loading ? "Saving..." : "商品を追加"}

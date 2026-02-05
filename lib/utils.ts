@@ -1,8 +1,4 @@
-export const formatJPY = (value: number) =>
-  new Intl.NumberFormat("ja-JP", {
-    style: "currency",
-    currency: "JPY",
-  }).format(value);
+export const formatJPY = (value: number) => `¥ ${value.toLocaleString("ja-JP")}`;
 
 export const toSlug = (value: string) =>
   value

@@ -61,7 +61,7 @@ export const getActiveProducts = async (): Promise<Product[]> => {
   }
 
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("products")
       .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
@@ -87,7 +87,7 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
   }
 
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("products")
       .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")

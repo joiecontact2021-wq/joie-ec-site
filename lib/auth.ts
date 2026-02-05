@@ -14,13 +14,13 @@ export const getAdminEmails = () => {
 export const isAdminEmail = (email?: string | null) => {
   const admins = getAdminEmails();
   if (admins.length === 0) {
-    return true;
+    return false;
   }
   return admins.includes(normalizeEmail(email));
 };
 
 export const requireAdminUser = async () => {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {

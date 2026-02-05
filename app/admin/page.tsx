@@ -6,7 +6,7 @@ export default async function AdminPage() {
   const { user } = await requireAdminUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect("/admin/login?error=forbidden");
   }
 
   return (

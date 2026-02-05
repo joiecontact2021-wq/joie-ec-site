@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
         const { error: otpError } = await supabase.auth.signInWithOtp({
           email,
           options: {
-            emailRedirectTo: `${window.location.origin}/admin`,
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=/admin`,
           },
         });
         if (otpError) throw otpError;
@@ -54,6 +54,7 @@ export default function AdminLoginPage() {
       <p className="mt-3 text-sm text-joie-text/70">
         メールアドレスのみでログインリンクを送信できます。パスワードを入力すると即時ログインできます。
       </p>
+      <p className="mt-2 text-xs text-joie-text/60">管理者として許可されたメールのみログインできます。</p>
       {reason === "forbidden" ? (
         <p className="mt-4 text-xs text-red-600">管理者権限がありません。</p>
       ) : null}

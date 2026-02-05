@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAdminUser } from "@/lib/auth";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { toSlug } from "@/lib/utils";
@@ -16,9 +16,10 @@ const parseInteger = (value: unknown) => {
 };
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { user, error } = await requireAdminUser();
   if (!user) {
     return NextResponse.json({ error: error?.message || "Unauthorized" }, { status: 401 });
@@ -82,7 +83,7 @@ export async function PATCH(
   const { data, error: updateError } = await admin
     .from("products")
     .update(updates)
-    .eq("id", params.id)
+    .eq("id", id)
     .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
     .single();
 
@@ -94,16 +95,17 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { user, error } = await requireAdminUser();
   if (!user) {
     return NextResponse.json({ error: error?.message || "Unauthorized" }, { status: 401 });
   }
 
   const admin = createAdminSupabaseClient();
-  const { error: deleteError } = await admin.from("products").delete().eq("id", params.id);
+  const { error: deleteError } = await admin.from("products").delete().eq("id", id);
 
   if (deleteError) {
     return NextResponse.json({ error: deleteError.message }, { status: 500 });

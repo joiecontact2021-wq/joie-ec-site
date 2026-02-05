@@ -21,7 +21,8 @@ begin
   new.updated_at = now();
   return new;
 end;
-$$ language plpgsql;
+$$ language plpgsql
+set search_path = public, pg_temp;
 
 drop trigger if exists products_set_updated_at on products;
 create trigger products_set_updated_at
@@ -31,8 +32,14 @@ execute procedure set_updated_at();
 
 alter table products enable row level security;
 
+revoke all on table public.products from public;
+revoke all on table public.products from anon, authenticated;
+grant usage on schema public to anon, authenticated;
+grant select on table public.products to anon, authenticated;
+
 drop policy if exists "Public read active products" on products;
 create policy "Public read active products"
   on products
   for select
+  to anon, authenticated
   using (is_active = true);

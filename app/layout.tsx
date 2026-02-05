@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
+import { InfoMenu } from "@/components/store/InfoMenu";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -32,10 +33,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-joie-bg text-joie-text antialiased">
         <CartProvider>
           <Header />
-          <main className="mx-auto min-h-[70vh] max-w-6xl px-6 pb-24 pt-10">
-            {children}
-          </main>
+          <main className="mx-auto min-h-[70vh] max-w-[1100px] px-6 pb-20 pt-4">{children}</main>
           <Footer />
+          <InfoMenu />
         </CartProvider>
       </body>
     </html>
