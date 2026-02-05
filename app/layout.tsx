@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
+import { Cormorant_Garamond, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { Header } from "@/components/store/Header";
@@ -17,12 +17,6 @@ const notoSans = Noto_Sans_JP({
   variable: "--font-noto",
 });
 
-const notoSerif = Noto_Serif_JP({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-noto-serif",
-});
-
 export const metadata: Metadata = {
   title: "joie | Hair Care & Salon Store",
   description: "大阪のプライベートサロン joie の公式オンラインストア",
@@ -34,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={`${cormorant.variable} ${notoSans.variable} ${notoSerif.variable}`}>
+    <html lang="ja" className={`${cormorant.variable} ${notoSans.variable}`}>
       <body className="min-h-screen bg-joie-bg text-joie-text antialiased">
         <CartProvider>
           <Header />

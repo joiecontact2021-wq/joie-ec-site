@@ -10,6 +10,14 @@ export default function LegalPage() {
         / 特定商取引法に基づく表記
       </nav>
       <div className="mx-auto max-w-3xl rounded-3xl border border-white/70 bg-white/70 p-6 sm:p-10">
+        <div className="mb-6 flex justify-center sm:mb-8">
+          <img
+            src="/joie-mark.png"
+            alt="joie"
+            className="h-24 w-24 object-contain sm:h-28 sm:w-28"
+            loading="eager"
+          />
+        </div>
         <h1 className="font-ui mb-10 text-center text-2xl tracking-widest sm:mb-12">
           特定商取引法に基づく表記
         </h1>
