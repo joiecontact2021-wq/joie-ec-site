@@ -8,11 +8,11 @@ export const Header = () => {
   const { totalQuantity } = useCart();
 
   return (
-    <header className="border-b border-black/30 bg-white pt-[140px] pb-4">
+    <header className="border-b border-black/30 bg-white pt-24 pb-4 sm:pt-[140px]">
       <div className="mx-auto flex max-w-[1100px] items-center justify-end px-6">
         <Link
           href="/cart"
-          className="cart-button"
+          className="cart-button relative"
           aria-label="Cart"
         >
           <ShoppingCart className="h-5 w-5 text-white" />

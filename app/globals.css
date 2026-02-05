@@ -48,6 +48,11 @@ button {
   height: 22px;
 }
 
+.info-menu {
+  bottom: 96px;
+  left: 24px;
+}
+
 .selectbox-5 {
   display: inline-flex;
   align-items: center;
@@ -81,6 +86,35 @@ button {
 
 .selectbox-5 select:focus {
   outline: none;
+}
+
+@media (max-width: 640px) {
+  .cart-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  .cart-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .info-menu {
+    bottom: 120px;
+    left: 16px;
+  }
+
+  .selectbox-5 {
+    width: 100%;
+  }
+
+  .selectbox-5 select {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 ::selection {

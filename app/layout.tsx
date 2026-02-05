@@ -33,7 +33,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-joie-bg text-joie-text antialiased">
         <CartProvider>
           <Header />
-          <main className="mx-auto min-h-[70vh] max-w-[1100px] px-6 pb-20 pt-4">{children}</main>
+          <main className="mx-auto min-h-[70vh] max-w-[1100px] px-4 pb-16 pt-4 sm:px-6 sm:pb-20">
+            {children}
+          </main>
           <Footer />
           <InfoMenu />
         </CartProvider>

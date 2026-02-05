@@ -19,7 +19,7 @@ export const InfoMenu = () => {
   }, []);
 
   return (
-    <div ref={ref} className="fixed z-50" style={{ bottom: 96, left: 24 }}>
+    <div ref={ref} className="info-menu fixed z-50">
       {open ? (
         <div className="mb-3 w-64 border border-black/30 bg-white px-4 py-3 text-[11px] tracking-[0.18em] text-joie-text/80">
           <div className="flex flex-col gap-2">

@@ -48,14 +48,14 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
   }, [products, sortKey]);
 
   return (
-    <div className="space-y-8 pt-[100px]">
-      <div className="flex flex-wrap items-center justify-between gap-6">
+    <div className="space-y-6 pt-12 sm:space-y-8 sm:pt-20 md:pt-[100px]">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <nav className="text-[10px] tracking-[0.35em] text-joie-text/60">
           ホーム / 商品一覧
         </nav>
-        <div className="flex items-center gap-4 text-[11px] tracking-[0.2em] text-joie-text/70">
+        <div className="flex w-full flex-col gap-3 text-[11px] tracking-[0.2em] text-joie-text/70 sm:w-auto sm:flex-row sm:items-center">
           <span>並び替え</span>
-          <label className="selectbox-5">
+          <label className="selectbox-5 w-full sm:w-auto">
             <select
               value={sortKey}
               onChange={(event) => setSortKey(event.target.value as SortKey)}
@@ -71,9 +71,13 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
         </div>
       </div>
 
-      <section className="grid justify-start gap-x-16 gap-y-16 [grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
+      <section className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-10 sm:gap-y-12 md:justify-start md:gap-x-16 md:gap-y-16 md:[grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
         {sortedProducts.map((product) => (
-          <Link key={product.id} href={`/products/${product.slug}`} className="group block max-w-[260px]">
+          <Link
+            key={product.id}
+            href={`/products/${product.slug}`}
+            className="group block w-full md:max-w-[260px]"
+          >
             <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">
               {product.image_url ? (
                 <img
@@ -88,9 +92,9 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
                 </div>
               )}
             </div>
-            <div className="mt-4 space-y-1 text-[12.5px] text-joie-text/90">
+            <div className="mt-3 space-y-1 text-[11.5px] text-joie-text/90 sm:mt-4 sm:text-[12.5px]">
               <p className="tracking-[0.04em]">{product.name}</p>
-              <p className="text-[11.5px] tracking-[0.18em] text-joie-text/60">
+              <p className="text-[10.5px] tracking-[0.18em] text-joie-text/60 sm:text-[11.5px]">
                 {formatJPY(product.price)}
               </p>
             </div>
