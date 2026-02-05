@@ -4,7 +4,6 @@ import "./globals.css";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
-import { InfoMenu } from "@/components/store/InfoMenu";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -43,7 +42,6 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <InfoMenu />
         </CartProvider>
       </body>
     </html>

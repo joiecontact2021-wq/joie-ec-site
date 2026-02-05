@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-export const InfoMenu = () => {
+type InfoMenuProps = {
+  className?: string;
+};
+
+export const InfoMenu = ({ className }: InfoMenuProps) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -19,7 +23,10 @@ export const InfoMenu = () => {
   }, []);
 
   return (
-    <div ref={ref} className="info-menu fixed z-50">
+    <div
+      ref={ref}
+      className={`info-menu inline-flex flex-col items-start ${className ?? ""}`.trim()}
+    >
       {open ? (
         <div className="font-ui mb-3 w-64 border border-black/30 bg-white px-4 py-3 text-[11px] tracking-[0.18em] text-joie-text/80">
           <div className="flex flex-col gap-2">
