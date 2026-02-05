@@ -1,8 +1,13 @@
+import Link from "next/link";
+
 export default function PrivacyPage() {
   return (
     <div className="space-y-6">
       <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">
-        ホーム / プライバシーポリシー
+        <Link href="/" className="hover:text-joie-text">
+          ホーム
+        </Link>{" "}
+        / プライバシーポリシー
       </nav>
       <div className="mx-auto max-w-3xl rounded-3xl border border-white/70 bg-white/70 p-6 sm:p-10">
         <h1 className="font-ui mb-10 text-center text-2xl tracking-widest sm:mb-12">

@@ -9,7 +9,12 @@ export default function CartPage() {
 
   return (
     <div className="space-y-8">
-      <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">ホーム / カート</nav>
+      <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">
+        <Link href="/" className="hover:text-joie-text">
+          ホーム
+        </Link>{" "}
+        / カート
+      </nav>
       <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.4em] text-joie-text/70">
         <span>Cart</span>
         <Link href="/" className="text-joie-text/60 hover:text-joie-text">
