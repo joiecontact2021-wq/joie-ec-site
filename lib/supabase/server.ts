@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 export const createServerSupabaseClient = async () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -16,7 +16,7 @@ export const createServerSupabaseClient = async () => {
       getAll() {
         return typeof cookieStore.getAll === "function" ? cookieStore.getAll() : [];
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
             if (typeof cookieStore.set === "function") {
