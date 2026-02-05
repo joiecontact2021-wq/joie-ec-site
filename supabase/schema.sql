@@ -43,3 +43,12 @@ create policy "Public read active products"
   for select
   to anon, authenticated
   using (is_active = true);
+
+create table if not exists stripe_events (
+  id text primary key,
+  processed_at timestamptz default now()
+);
+
+alter table stripe_events enable row level security;
+revoke all on table public.stripe_events from public;
+revoke all on table public.stripe_events from anon, authenticated;

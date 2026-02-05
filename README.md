@@ -31,16 +31,31 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ADMIN_EMAILS=you@example.com
 STRIPE_SECRET_KEY=your_stripe_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 CHECKOUT_REQUIRE_SHIPPING=true
+RESEND_API_KEY=your_resend_key
+RESEND_FROM_EMAIL=your_from_email
+ORDER_NOTIFICATION_EMAIL=you@example.com
+SLACK_WEBHOOK_URL=your_slack_webhook_url
 ```
 
 3. Run the SQL in `supabase/schema.sql` using the Supabase SQL editor.
    - This enables RLS, revokes default privileges, and adds a policy for public reads of `is_active` products.
+   - This also creates the `stripe_events` table used to avoid double-processing Stripe webhooks.
 4. Open the Supabase Security Advisor and confirm there are no errors or warnings.
 
 Important:
 - `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to the browser. It is used only in server-side API routes.
+
+## Stripe Setup
+
+1. Add your Stripe secret key in `.env.local` / Vercel environment variables.
+2. Create a webhook endpoint in Stripe:
+   - URL: `https://your-domain.vercel.app/api/webhooks/stripe`
+   - Events: `checkout.session.completed`
+3. Copy the webhook signing secret into `STRIPE_WEBHOOK_SECRET`.
+4. (Optional) Set `RESEND_API_KEY`, `ORDER_NOTIFICATION_EMAIL`, and `SLACK_WEBHOOK_URL` to receive order notifications.
 
 ## Learn More
 

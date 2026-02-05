@@ -63,6 +63,9 @@ export async function POST(request: Request) {
         ? { allowed_countries: ["JP"] }
         : undefined,
       phone_number_collection: shippingRequired ? { enabled: true } : undefined,
+      metadata: {
+        items: JSON.stringify(items),
+      },
     });
 
     return NextResponse.json({ url: session.url });

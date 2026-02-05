@@ -30,7 +30,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
         </Link>
       </div>
       <p className="text-[10px] tracking-[0.2em] text-joie-text/50">
-        決済機能は準備中です。
+        決済はStripeで安全に行われます。
       </p>
     </div>
   );

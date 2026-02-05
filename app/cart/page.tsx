@@ -1,11 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatJPY } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem, clear } = useCart();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "決済の開始に失敗しました。");
+      }
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : "決済の開始に失敗しました。");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -86,11 +114,15 @@ export default function CartPage() {
             </div>
             <button
               type="button"
-              disabled
-              className="w-full border border-black/40 bg-black/40 px-4 py-2 text-[11px] uppercase tracking-[0.35em] text-white/80"
+              onClick={handleCheckout}
+              disabled={checkoutLoading || items.length === 0}
+              className="w-full border border-black bg-black px-4 py-2 text-[11px] uppercase tracking-[0.35em] text-white transition hover:opacity-90 disabled:opacity-50"
             >
-              Checkout（準備中）
+              {checkoutLoading ? "Redirecting..." : "Checkout"}
             </button>
+            {checkoutError ? (
+              <p className="text-[11px] tracking-[0.18em] text-red-600">{checkoutError}</p>
+            ) : null}
             <button
               type="button"
               onClick={clear}
