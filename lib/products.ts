@@ -55,6 +55,17 @@ const fallbackProducts: Product[] = [
 const hasSupabaseEnv = () =>
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+const normalizeSlug = (value: string) => {
+  const trimmed = value.trim();
+  let decoded = trimmed;
+  try {
+    decoded = decodeURIComponent(trimmed);
+  } catch {
+    decoded = trimmed;
+  }
+  return decoded.normalize("NFC");
+};
+
 export const getActiveProducts = async (): Promise<Product[]> => {
   if (!hasSupabaseEnv()) {
     return fallbackProducts;
@@ -82,8 +93,11 @@ export const getActiveProducts = async (): Promise<Product[]> => {
 };
 
 export const getProductBySlug = async (slug: string): Promise<Product | null> => {
+  const normalizedSlug = normalizeSlug(slug);
   if (!hasSupabaseEnv()) {
-    return fallbackProducts.find((product) => product.slug === slug) ?? null;
+    return (
+      fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+    );
   }
 
   try {
@@ -91,18 +105,38 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
     const { data, error } = await supabase
       .from("products")
       .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
-      .eq("slug", slug)
+      .eq("slug", normalizedSlug)
       .eq("is_active", true)
       .maybeSingle();
 
     if (error) {
       console.error("Supabase error", error.message);
-      return fallbackProducts.find((product) => product.slug === slug) ?? null;
+      return (
+        fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+      );
     }
 
-    return data ?? null;
+    if (data) {
+      return data;
+    }
+
+    const { data: allData, error: listError } = await supabase
+      .from("products")
+      .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
+      .eq("is_active", true);
+
+    if (listError) {
+      console.error("Supabase error", listError.message);
+      return null;
+    }
+
+    return (
+      allData?.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+    );
   } catch (error) {
     console.error("Supabase error", error);
-    return fallbackProducts.find((product) => product.slug === slug) ?? null;
+    return (
+      fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+    );
   }
 };

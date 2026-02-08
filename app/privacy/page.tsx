@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function PrivacyPage() {
   return (
     <div className="space-y-6">
-      <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">
+      <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
         <Link href="/" className="hover:text-joie-text">
           ホーム
         </Link>{" "}

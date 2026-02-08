@@ -37,7 +37,7 @@ export default function CartPage() {
 
   return (
     <div className="space-y-8">
-      <nav className="font-ui text-[10px] tracking-[0.35em] text-joie-text/60">
+      <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
         <Link href="/" className="hover:text-joie-text">
           ホーム
         </Link>{" "}

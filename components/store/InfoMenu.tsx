@@ -43,12 +43,12 @@ export const InfoMenu = ({ className }: InfoMenuProps) => {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         style={{
-          width: 42,
-          height: 42,
+          width: 34,
+          height: 34,
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 10,
+          borderRadius: 9,
           background: "#111",
           border: "none",
           padding: 0,
@@ -57,15 +57,15 @@ export const InfoMenu = ({ className }: InfoMenuProps) => {
       >
         <span
           style={{
-            width: 22,
-            height: 22,
+            width: 18,
+            height: 18,
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 999,
             background: "#fff",
             color: "#111",
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: 700,
             lineHeight: 1,
           }}

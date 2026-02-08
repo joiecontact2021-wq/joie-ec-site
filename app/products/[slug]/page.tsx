@@ -19,8 +19,15 @@ export default async function ProductPage({
 
   return (
     <div className="space-y-8">
-      <nav className="text-[10px] tracking-[0.35em] text-joie-text/60">
-        <Link href="/">ホーム</Link> / <Link href="/">商品一覧</Link> / {product.name}
+      <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
+        <Link href="/" className="hover:text-joie-text">
+          ホーム
+        </Link>{" "}
+        /{" "}
+        <Link href="/" className="hover:text-joie-text">
+          商品一覧
+        </Link>{" "}
+        / {product.name}
       </nav>
 
       <div className="grid gap-10 md:grid-cols-2">

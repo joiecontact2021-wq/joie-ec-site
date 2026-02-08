@@ -4,6 +4,7 @@ export const toSlug = (value: string) =>
   value
     .toLowerCase()
     .trim()
+    .normalize("NFC")
     .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);

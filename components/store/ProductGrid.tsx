@@ -50,10 +50,13 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-6 pt-12 sm:space-y-8 sm:pt-20 md:pt-[100px]">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav className="font-ui text-[12px] tracking-[0.32em] text-joie-text/60">
-          ホーム / 商品一覧
+        <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
+          <Link href="/" className="hover:text-joie-text">
+            ホーム
+          </Link>{" "}
+          / 商品一覧
         </nav>
-        <div className="font-ui flex w-full flex-col gap-3 text-[12px] tracking-[0.2em] text-joie-text/70 sm:w-auto sm:flex-row sm:items-center">
+        <div className="font-ui flex w-full flex-col gap-3 text-[13px] tracking-[0.2em] text-joie-text/70 sm:w-auto sm:flex-row sm:items-center sm:text-[14px]">
           <span>並び替え</span>
           <label className="selectbox-5 w-full sm:w-auto">
             <select
