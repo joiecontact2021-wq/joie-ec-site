@@ -47,11 +47,11 @@ export async function PATCH(
   }
 
   if (body?.slug !== undefined) {
-    const slug = String(body.slug ?? "").trim();
-    if (!slug && body?.name === undefined) {
+    const rawSlug = String(body.slug ?? "").trim();
+    if (!rawSlug && body?.name === undefined) {
       return NextResponse.json({ error: "スラッグを入力してください。" }, { status: 400 });
     }
-    updates.slug = slug ? slug : toSlug(String(body?.name ?? ""));
+    updates.slug = rawSlug ? toSlug(rawSlug) : toSlug(String(body?.name ?? ""));
   }
 
   if (body?.price !== undefined) {

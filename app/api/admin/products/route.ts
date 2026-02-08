@@ -60,7 +60,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "価格を正しく入力してください。" }, { status: 400 });
   }
 
-  const slug = String(body?.slug ?? "").trim() || toSlug(name);
+  const rawSlug = String(body?.slug ?? "").trim();
+  const slug = rawSlug ? toSlug(rawSlug) : toSlug(name);
 
   const discountPrice = parseOptionalInteger(body?.discount_price);
   if (discountPrice !== null && discountPrice <= 0) {

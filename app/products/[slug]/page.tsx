@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getActiveProducts, getProductById, getProductBySlug } from "@/lib/products";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
@@ -16,6 +16,8 @@ export default async function ProductPage({
 }) {
   const isUuid = (value: string) =>
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  const normalizeSlugValue = (value: string) =>
+    value.trim().normalize("NFC").toLowerCase();
   const resolvedParams = await Promise.resolve(params);
   const resolvedSearchParams = await Promise.resolve(searchParams);
   const decodedSlug = decodeURIComponent(resolvedParams.slug);
@@ -124,6 +126,12 @@ export default async function ProductPage({
     }
 
     notFound();
+  }
+
+  const canonicalSlug = normalizeSlugValue(product.slug);
+  const requestedSlug = normalizeSlugValue(slugPart);
+  if (!debugEnabled && canonicalSlug && requestedSlug && canonicalSlug !== requestedSlug) {
+    redirect(`/products/${encodeURIComponent(product.slug)}?id=${product.id}`);
   }
 
   return (
