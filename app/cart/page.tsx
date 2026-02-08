@@ -44,9 +44,9 @@ export default function CartPage() {
         / カート
       </nav>
       <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.4em] text-joie-text/70">
-        <span>Cart</span>
+        <span>カート</span>
         <Link href="/" className="text-joie-text/60 hover:text-joie-text">
-          Continue Shopping
+          買い物を続ける
         </Link>
       </div>
 
@@ -93,7 +93,7 @@ export default function CartPage() {
                   onClick={() => removeItem(item.id)}
                   className="text-[10px] uppercase tracking-[0.3em] text-joie-text/40"
                 >
-                  Remove
+                  削除
                 </button>
               </div>
             ))}
@@ -101,15 +101,15 @@ export default function CartPage() {
 
           <div className="space-y-4 border border-black/20 p-6 text-[11px] tracking-[0.25em] text-joie-text/70">
             <div className="flex items-center justify-between">
-              <span>Subtotal</span>
+              <span>小計</span>
               <span className="tracking-[0.1em]">{formatJPY(subtotal)}</span>
             </div>
             <div className="flex items-center justify-between text-[10px] text-joie-text/50">
-              <span>Shipping</span>
-              <span>Checkoutで計算</span>
+              <span>送料</span>
+              <span>決済時に計算</span>
             </div>
             <div className="flex items-center justify-between border-t border-black/10 pt-4 text-[12px] text-joie-text">
-              <span>Total</span>
+              <span>合計</span>
               <span className="tracking-[0.1em]">{formatJPY(subtotal)}</span>
             </div>
             <button
@@ -118,7 +118,7 @@ export default function CartPage() {
               disabled={checkoutLoading || items.length === 0}
               className="w-full border border-black bg-black px-4 py-2 text-[11px] uppercase tracking-[0.35em] text-white transition hover:opacity-90 disabled:opacity-50"
             >
-              {checkoutLoading ? "Redirecting..." : "Checkout"}
+              {checkoutLoading ? "決済へ移動中..." : "購入手続きへ"}
             </button>
             {checkoutError ? (
               <p className="text-[11px] tracking-[0.18em] text-red-600">{checkoutError}</p>
@@ -128,7 +128,7 @@ export default function CartPage() {
               onClick={clear}
               className="w-full text-center text-[10px] uppercase tracking-[0.3em] text-joie-text/40"
             >
-              Clear cart
+              カートを空にする
             </button>
           </div>
         </div>
