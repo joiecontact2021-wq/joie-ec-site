@@ -11,21 +11,23 @@ export default async function ProductPage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams?: { id?: string; debug?: string };
+  params: { slug: string } | Promise<{ slug: string }>;
+  searchParams?: { id?: string; debug?: string } | Promise<{ id?: string; debug?: string }>;
 }) {
   const isUuid = (value: string) =>
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
-  const decodedSlug = decodeURIComponent(params.slug);
+  const resolvedParams = await Promise.resolve(params);
+  const resolvedSearchParams = await Promise.resolve(searchParams);
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
   const separatorIndex = decodedSlug.lastIndexOf("--");
   const slugPart =
     separatorIndex >= 0 ? decodedSlug.slice(0, separatorIndex) : decodedSlug;
   const idFromSlug =
     separatorIndex >= 0 ? decodedSlug.slice(separatorIndex + 2) : undefined;
-  const debugEnabled = searchParams?.debug === "1";
+  const debugEnabled = resolvedSearchParams?.debug === "1";
 
   const fallbackId = isUuid(slugPart) ? slugPart : undefined;
-  const requestedId = searchParams?.id ?? idFromSlug ?? fallbackId;
+  const requestedId = resolvedSearchParams?.id ?? idFromSlug ?? fallbackId;
   let product =
     (requestedId ? await getProductById(requestedId) : null) ??
     (await getProductBySlug(slugPart));
