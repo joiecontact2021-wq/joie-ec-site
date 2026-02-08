@@ -56,7 +56,7 @@ const hasSupabaseEnv = () =>
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 const normalizeSlug = (value: string) => {
-  const trimmed = value.trim();
+  const trimmed = String(value ?? "").trim();
   let decoded = trimmed;
   try {
     decoded = decodeURIComponent(trimmed);
