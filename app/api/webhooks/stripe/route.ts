@@ -142,7 +142,9 @@ export async function POST(request: Request) {
 
   const total = session.amount_total ? formatJPY(session.amount_total) : "";
   const customer = session.customer_details;
-  const shipping = session.shipping_details;
+  const shipping =
+    (session as Stripe.Checkout.Session & { shipping_details?: Stripe.Checkout.Session.ShippingDetails | null })
+      .shipping_details ?? session.collected_information?.shipping_details ?? null;
 
   const header = `新しい注文が入りました${total ? ` (${total})` : ""}`;
   const customerInfo = [
