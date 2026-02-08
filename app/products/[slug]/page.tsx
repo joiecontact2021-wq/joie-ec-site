@@ -89,7 +89,7 @@ export default async function ProductPage({
       }
 
       const debugInfo = {
-        slug: params.slug,
+        slug: resolvedParams.slug,
         decodedSlug,
         slugPart,
         requestedId,
