@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getActiveProducts, getProductById, getProductBySlug } from "@/lib/products";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { ProductActions } from "@/components/store/ProductActions";
 
 export const dynamic = "force-dynamic";
@@ -11,16 +12,20 @@ export default async function ProductPage({
   searchParams,
 }: {
   params: { slug: string };
-  searchParams?: { id?: string };
+  searchParams?: { id?: string; debug?: string };
 }) {
+  const isUuid = (value: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
   const decodedSlug = decodeURIComponent(params.slug);
   const separatorIndex = decodedSlug.lastIndexOf("--");
   const slugPart =
     separatorIndex >= 0 ? decodedSlug.slice(0, separatorIndex) : decodedSlug;
   const idFromSlug =
     separatorIndex >= 0 ? decodedSlug.slice(separatorIndex + 2) : undefined;
+  const debugEnabled = searchParams?.debug === "1";
 
-  const requestedId = searchParams?.id ?? idFromSlug;
+  const fallbackId = isUuid(slugPart) ? slugPart : undefined;
+  const requestedId = searchParams?.id ?? idFromSlug ?? fallbackId;
   let product =
     (requestedId ? await getProductById(requestedId) : null) ??
     (await getProductBySlug(slugPart));
@@ -34,12 +39,94 @@ export default async function ProductPage({
   }
 
   if (!product) {
+    if (debugEnabled) {
+      let adminError: string | null = null;
+      let adminByIdFound = false;
+      let adminBySlugFound = false;
+      let adminCount: number | null = null;
+      let adminSample: { id: string; slug: string | null; is_active: boolean | null }[] = [];
+
+      try {
+        const admin = createAdminSupabaseClient();
+        const { data: sampleData, error: sampleError, count } = await admin
+          .from("products")
+          .select("id,slug,is_active", { count: "exact" })
+          .limit(8);
+        if (sampleError) {
+          adminError = sampleError.message;
+        } else {
+          adminCount = count ?? null;
+          adminSample = (sampleData ?? []) as typeof adminSample;
+        }
+
+        if (requestedId) {
+          const { data: byIdData, error: byIdError } = await admin
+            .from("products")
+            .select("id")
+            .eq("id", requestedId)
+            .maybeSingle();
+          if (byIdError) {
+            adminError = adminError ?? byIdError.message;
+          }
+          adminByIdFound = Boolean(byIdData);
+        }
+
+        if (slugPart) {
+          const { data: bySlugData, error: bySlugError } = await admin
+            .from("products")
+            .select("id")
+            .eq("slug", slugPart)
+            .maybeSingle();
+          if (bySlugError) {
+            adminError = adminError ?? bySlugError.message;
+          }
+          adminBySlugFound = Boolean(bySlugData);
+        }
+      } catch (error) {
+        adminError = error instanceof Error ? error.message : "Admin client error";
+      }
+
+      const debugInfo = {
+        slug: params.slug,
+        decodedSlug,
+        slugPart,
+        requestedId,
+        hasSupabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+        hasAnonKey: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+        hasServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+        adminError,
+        adminByIdFound,
+        adminBySlugFound,
+        adminCount,
+        adminSample,
+      };
+
+      return (
+        <div className="space-y-6">
+          <nav className="font-ui text-[14px] tracking-[0.3em] text-joie-text/60 sm:text-[15px]">
+            <Link href="/" className="hover:text-joie-text">
+              ホーム
+            </Link>{" "}
+            / 商品詳細 (Debug)
+          </nav>
+          <div className="rounded-3xl border border-black/10 bg-white/70 p-6 text-sm text-joie-text/80">
+            <p className="mb-3 text-xs uppercase tracking-[0.3em] text-joie-text/50">
+              Debug Info
+            </p>
+            <pre className="whitespace-pre-wrap break-all text-[12px] leading-relaxed">
+              {JSON.stringify(debugInfo, null, 2)}
+            </pre>
+          </div>
+        </div>
+      );
+    }
+
     notFound();
   }
 
   return (
     <div className="space-y-8">
-      <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
+      <nav className="font-ui text-[14px] tracking-[0.3em] text-joie-text/60 sm:text-[15px]">
         <Link href="/" className="hover:text-joie-text">
           ホーム
         </Link>{" "}

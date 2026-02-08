@@ -19,6 +19,12 @@ const resolveCategory = (value: string | null) => value?.trim() || "Other";
 export const ProductGrid = ({ products }: { products: Product[] }) => {
   const [sortKey, setSortKey] = useState<SortKey>("featured");
 
+  const buildProductHref = (product: Product) => {
+    const slugBase = product.slug?.trim() ? product.slug : product.id;
+    const encodedSlug = encodeURIComponent(slugBase);
+    return `/products/${encodedSlug}?id=${product.id}`;
+  };
+
   const sortedProducts = useMemo(() => {
     const items = [...products];
 
@@ -50,13 +56,13 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-6 pt-12 sm:space-y-8 sm:pt-20 md:pt-[100px]">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
+        <nav className="font-ui text-[14px] tracking-[0.3em] text-joie-text/60 sm:text-[15px]">
           <Link href="/" className="hover:text-joie-text">
             ホーム
           </Link>{" "}
           / 商品一覧
         </nav>
-        <div className="font-ui flex w-full flex-col gap-3 text-[13px] tracking-[0.2em] text-joie-text/70 sm:w-auto sm:flex-row sm:items-center sm:text-[14px]">
+        <div className="font-ui flex w-full flex-col gap-3 text-[14px] tracking-[0.25em] text-joie-text/70 sm:w-auto sm:flex-row sm:items-center sm:text-[15px]">
           <span>並び替え</span>
           <label className="selectbox-5 w-full sm:w-auto">
             <select
@@ -76,11 +82,7 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
 
       <section className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-10 sm:gap-y-12 md:justify-start md:gap-x-16 md:gap-y-16 md:[grid-template-columns:repeat(auto-fill,minmax(230px,1fr))]">
         {sortedProducts.map((product) => (
-          <Link
-            key={product.id}
-            href={`/products/${encodeURIComponent(product.slug)}--${product.id}`}
-            className="group block w-full md:max-w-[260px]"
-          >
+          <Link key={product.id} href={buildProductHref(product)} className="group block w-full md:max-w-[260px]">
             <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">
               {product.image_url ? (
                 <img

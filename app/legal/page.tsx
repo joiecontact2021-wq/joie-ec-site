@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function LegalPage() {
   return (
     <div className="space-y-6">
-      <nav className="font-ui text-[13px] tracking-[0.3em] text-joie-text/60 sm:text-[14px]">
+      <nav className="font-ui text-[14px] tracking-[0.3em] text-joie-text/60 sm:text-[15px]">
         <Link href="/" className="hover:text-joie-text">
           ホーム
         </Link>{" "}
@@ -12,9 +12,9 @@ export default function LegalPage() {
       <div className="mx-auto max-w-3xl rounded-3xl border border-white/70 bg-white/70 p-6 sm:p-10">
         <div className="mb-6 flex justify-center sm:mb-8">
           <img
-            src="/joie-mark.png"
+            src="/joie-logo.png"
             alt="joie"
-            className="h-24 w-24 object-contain sm:h-28 sm:w-28"
+            className="h-24 w-24 object-contain sm:h-32 sm:w-32"
             loading="eager"
           />
         </div>
