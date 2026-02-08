@@ -20,15 +20,17 @@ export default async function ProductPage({
   const idFromSlug =
     separatorIndex >= 0 ? decodedSlug.slice(separatorIndex + 2) : undefined;
 
+  const requestedId = searchParams?.id ?? idFromSlug;
   let product =
-    (searchParams?.id ? await getProductById(searchParams.id) : null) ??
-    (idFromSlug ? await getProductById(idFromSlug) : null) ??
+    (requestedId ? await getProductById(requestedId) : null) ??
     (await getProductBySlug(slugPart));
   if (!product) {
     const normalized = slugPart.trim().toLowerCase();
     const products = await getActiveProducts();
     product =
-      products.find((item) => item.slug?.trim().toLowerCase() === normalized) ?? null;
+      (requestedId ? products.find((item) => item.id === requestedId) : null) ??
+      products.find((item) => item.slug?.trim().toLowerCase() === normalized) ??
+      null;
   }
 
   if (!product) {
