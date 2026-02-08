@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProductBySlug } from "@/lib/products";
+import { getActiveProducts, getProductBySlug } from "@/lib/products";
 import { ProductActions } from "@/components/store/ProductActions";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,13 @@ export default async function ProductPage({
 }: {
   params: { slug: string };
 }) {
-  const product = await getProductBySlug(params.slug);
+  let product = await getProductBySlug(params.slug);
+  if (!product) {
+    const normalized = decodeURIComponent(params.slug).trim().toLowerCase();
+    const products = await getActiveProducts();
+    product =
+      products.find((item) => item.slug?.trim().toLowerCase() === normalized) ?? null;
+  }
 
   if (!product) {
     notFound();

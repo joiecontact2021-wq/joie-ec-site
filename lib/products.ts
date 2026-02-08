@@ -89,6 +89,22 @@ export const getActiveProducts = async (): Promise<Product[]> => {
   }
 
   try {
+    const admin = createAdminClientSafe();
+    if (admin) {
+      const { data: adminData, error: adminError } = await admin
+        .from("products")
+        .select(selectFields)
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false });
+      if (!adminError && adminData) {
+        return adminData;
+      }
+      if (adminError) {
+        console.error("Supabase admin error", adminError.message);
+      }
+    }
+
     const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("products")
@@ -142,6 +158,23 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
   }
 
   try {
+    const admin = createAdminClientSafe();
+    if (admin) {
+      const { data: adminData, error: adminError } = await admin
+        .from("products")
+        .select(selectFields)
+        .eq("slug", normalizedSlug)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (adminError) {
+        console.error("Supabase admin error", adminError.message);
+      } else if (adminData) {
+        return adminData;
+      }
+    }
+
     const supabase = await createServerSupabaseClient();
     const fallbackLookup = async () => {
       const { data: listData, error: listError } = await supabase
@@ -172,22 +205,6 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
       console.error("Supabase error", error.message);
       const fallback = await fallbackLookup();
       if (fallback) return fallback;
-      const admin = createAdminClientSafe();
-      if (admin) {
-        const { data: adminData, error: adminError } = await admin
-          .from("products")
-          .select(selectFields)
-          .eq("slug", normalizedSlug)
-          .eq("is_active", true)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        if (adminError) {
-          console.error("Supabase admin error", adminError.message);
-        } else if (adminData) {
-          return adminData;
-        }
-      }
       return (
         fallback ??
         (fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null)
@@ -200,37 +217,10 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
 
     const fallback = await fallbackLookup();
     if (fallback) return fallback;
-    const admin = createAdminClientSafe();
-    if (admin) {
-      const { data: adminList, error: adminError } = await admin
-        .from("products")
-        .select(selectFields)
-        .eq("is_active", true);
-      if (adminError) {
-        console.error("Supabase admin error", adminError.message);
-      } else {
-        return (
-          adminList?.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
-        );
-      }
-    }
 
     return null;
   } catch (error) {
     console.error("Supabase error", error);
-    const admin = createAdminClientSafe();
-    if (admin) {
-      const { data: adminList, error: adminError } = await admin
-        .from("products")
-        .select(selectFields)
-        .eq("is_active", true);
-      if (!adminError) {
-        return (
-          adminList?.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
-        );
-      }
-    }
-
     return fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null;
   }
 };
