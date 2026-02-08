@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const admin = createAdminSupabaseClient();
     const { data, error } = await admin
       .from("products")
-      .select("id,name,price,image_url,is_active")
+      .select("id,name,price,discount_price,image_url,is_active")
       .in("id", ids)
       .eq("is_active", true);
 
@@ -33,11 +33,17 @@ export async function POST(request: Request) {
       if (!product) {
         throw new Error("商品が見つかりません。");
       }
+      const unitAmount =
+        product.discount_price &&
+        product.discount_price > 0 &&
+        product.discount_price < product.price
+          ? product.discount_price
+          : product.price;
       return {
         quantity: Math.max(1, Math.min(item.quantity ?? 1, 99)),
         price_data: {
           currency: "jpy",
-          unit_amount: product.price,
+          unit_amount: unitAmount,
           product_data: {
             name: product.name,
             images: product.image_url ? [product.image_url] : undefined,

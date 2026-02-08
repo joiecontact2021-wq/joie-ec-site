@@ -8,6 +8,13 @@ const parseNumber = (value: unknown) => {
   return Number.isFinite(number) ? number : null;
 };
 
+const parseOptionalInteger = (value: unknown) => {
+  if (value === "" || value === null || value === undefined) return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.trunc(number);
+};
+
 const parseInteger = (value: unknown) => {
   if (value === "" || value === null || value === undefined) return null;
   const number = Number(value);
@@ -55,6 +62,14 @@ export async function PATCH(
     updates.price = Math.trunc(price);
   }
 
+  if (body?.discount_price !== undefined) {
+    const discountPrice = parseOptionalInteger(body.discount_price);
+    if (discountPrice !== null && discountPrice <= 0) {
+      return NextResponse.json({ error: "割引価格を正しく入力してください。" }, { status: 400 });
+    }
+    updates.discount_price = discountPrice;
+  }
+
   if (body?.description !== undefined) {
     updates.description = String(body.description ?? "").trim() || null;
   }
@@ -84,7 +99,7 @@ export async function PATCH(
     .from("products")
     .update(updates)
     .eq("id", id)
-    .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
+    .select("id,name,slug,price,discount_price,description,image_url,category,stock,is_active,sort_order")
     .single();
 
   if (updateError) {

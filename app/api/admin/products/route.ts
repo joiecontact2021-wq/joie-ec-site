@@ -8,6 +8,13 @@ const parseNumber = (value: unknown) => {
   return Number.isFinite(number) ? number : null;
 };
 
+const parseOptionalInteger = (value: unknown) => {
+  if (value === "" || value === null || value === undefined) return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.trunc(number);
+};
+
 const parseInteger = (value: unknown) => {
   if (value === "" || value === null || value === undefined) return null;
   const number = Number(value);
@@ -24,7 +31,7 @@ export async function GET() {
   const admin = createAdminSupabaseClient();
   const { data, error: fetchError } = await admin
     .from("products")
-    .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
+    .select("id,name,slug,price,discount_price,description,image_url,category,stock,is_active,sort_order")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
@@ -55,10 +62,16 @@ export async function POST(request: Request) {
 
   const slug = String(body?.slug ?? "").trim() || toSlug(name);
 
+  const discountPrice = parseOptionalInteger(body?.discount_price);
+  if (discountPrice !== null && discountPrice <= 0) {
+    return NextResponse.json({ error: "割引価格を正しく入力してください。" }, { status: 400 });
+  }
+
   const payload = {
     name,
     slug,
     price: Math.trunc(price),
+    discount_price: discountPrice,
     description: String(body?.description ?? "").trim() || null,
     image_url: String(body?.image_url ?? "").trim() || null,
     category: String(body?.category ?? "").trim() || null,
@@ -71,7 +84,7 @@ export async function POST(request: Request) {
   const { data, error: insertError } = await admin
     .from("products")
     .insert(payload)
-    .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
+    .select("id,name,slug,price,discount_price,description,image_url,category,stock,is_active,sort_order")
     .single();
 
   if (insertError) {

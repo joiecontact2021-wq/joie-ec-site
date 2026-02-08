@@ -9,6 +9,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 type Draft = {
   name: string;
   price: string;
+  discount_price: string;
   description: string;
   image_url: string;
   category: string;
@@ -21,6 +22,7 @@ type Draft = {
 const emptyDraft: Draft = {
   name: "",
   price: "",
+  discount_price: "",
   description: "",
   image_url: "",
   category: "",
@@ -214,6 +216,16 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50">
+            割引価格 (任意)
+            <input
+              value={draft.discount_price}
+              onChange={(event) =>
+                setDraft((prev) => ({ ...prev, discount_price: event.target.value }))
+              }
+              className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
+            />
+          </label>
+          <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50">
             カテゴリー
             <input
               value={draft.category}
@@ -307,9 +319,25 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
         {products.map((product) => (
           <div key={product.id} className="rounded-3xl border border-white/70 bg-white/70 p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
+              <div className="flex items-center gap-4">
+                <div className="h-16 w-16 overflow-hidden rounded-2xl border border-joie-mist/60 bg-white/60">
+                  {product.image_url ? (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-[10px] text-joie-text/40">
+                      No Image
+                    </div>
+                  )}
+                </div>
+                <div>
                 <p className="text-xs uppercase tracking-[0.3em] text-joie-text/50">{product.category || ""}</p>
                 <h3 className="text-lg font-serif text-joie-ink">{product.name}</h3>
+              </div>
               </div>
               <div className="text-sm text-joie-text/70">{formatJPY(product.price)}</div>
             </div>
@@ -327,6 +355,14 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
                 <input
                   defaultValue={product.price}
                   onBlur={(event) => handleUpdate(product.id, { price: event.target.value })}
+                  className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
+                />
+              </label>
+              <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50">
+                割引価格 (任意)
+                <input
+                  defaultValue={product.discount_price ?? ""}
+                  onBlur={(event) => handleUpdate(product.id, { discount_price: event.target.value })}
                   className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
                 />
               </label>

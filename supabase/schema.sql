@@ -5,6 +5,7 @@ create table if not exists products (
   name text not null,
   slug text unique not null,
   price integer not null,
+  discount_price integer,
   description text,
   image_url text,
   category text,

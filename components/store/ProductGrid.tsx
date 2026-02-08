@@ -97,9 +97,19 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
             </div>
             <div className="mt-3 space-y-1 text-[11.5px] text-joie-text/90 sm:mt-4 sm:text-[12.5px]">
               <p className="tracking-[0.04em]">{product.name}</p>
-              <p className="text-[10.5px] tracking-[0.18em] text-joie-text/60 sm:text-[11.5px]">
-                {formatJPY(product.price)}
-              </p>
+              {product.discount_price && product.discount_price < product.price ? (
+                <div className="flex items-center gap-2 text-[10.5px] tracking-[0.18em] sm:text-[11.5px]">
+                  <span className="text-joie-text">{formatJPY(product.discount_price)}</span>
+                  <span className="text-joie-text/40 line-through">
+                    {formatJPY(product.price)}
+                  </span>
+                  <span className="text-[10px] text-joie-text/50">キャンペーン中</span>
+                </div>
+              ) : (
+                <p className="text-[10.5px] tracking-[0.18em] text-joie-text/60 sm:text-[11.5px]">
+                  {formatJPY(product.price)}
+                </p>
+              )}
             </div>
           </Link>
         ))}
