@@ -78,7 +78,7 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
         {sortedProducts.map((product) => (
           <Link
             key={product.id}
-            href={`/products/${encodeURIComponent(product.slug)}`}
+            href={`/products/${encodeURIComponent(product.slug)}?id=${product.id}`}
             className="group block w-full md:max-w-[260px]"
           >
             <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">

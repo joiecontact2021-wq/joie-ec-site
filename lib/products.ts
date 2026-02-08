@@ -224,3 +224,45 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
     return fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null;
   }
 };
+
+export const getProductById = async (id: string): Promise<Product | null> => {
+  const productId = String(id ?? "").trim();
+  if (!productId) return null;
+
+  if (!hasSupabaseEnv()) {
+    return fallbackProducts.find((product) => product.id === productId) ?? null;
+  }
+
+  try {
+    const admin = createAdminClientSafe();
+    if (admin) {
+      const { data: adminData, error: adminError } = await admin
+        .from("products")
+        .select(selectFields)
+        .eq("id", productId)
+        .maybeSingle();
+      if (adminError) {
+        console.error("Supabase admin error", adminError.message);
+      } else if (adminData) {
+        return adminData;
+      }
+    }
+
+    const supabase = await createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select(selectFields)
+      .eq("id", productId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Supabase error", error.message);
+      return fallbackProducts.find((product) => product.id === productId) ?? null;
+    }
+
+    return data ?? null;
+  } catch (error) {
+    console.error("Supabase error", error);
+    return fallbackProducts.find((product) => product.id === productId) ?? null;
+  }
+};

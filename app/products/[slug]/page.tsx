@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getActiveProducts, getProductBySlug } from "@/lib/products";
+import { getActiveProducts, getProductById, getProductBySlug } from "@/lib/products";
 import { ProductActions } from "@/components/store/ProductActions";
 
 export const dynamic = "force-dynamic";
@@ -8,10 +8,14 @@ export const dynamicParams = true;
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: { slug: string };
+  searchParams?: { id?: string };
 }) {
-  let product = await getProductBySlug(params.slug);
+  let product =
+    (searchParams?.id ? await getProductById(searchParams.id) : null) ??
+    (await getProductBySlug(params.slug));
   if (!product) {
     const normalized = decodeURIComponent(params.slug).trim().toLowerCase();
     const products = await getActiveProducts();
