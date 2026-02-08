@@ -3,6 +3,9 @@ import Link from "next/link";
 import { getProductBySlug } from "@/lib/products";
 import { ProductActions } from "@/components/store/ProductActions";
 
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 export default async function ProductPage({
   params,
 }: {
