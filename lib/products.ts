@@ -102,6 +102,22 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
 
   try {
     const supabase = await createServerSupabaseClient();
+    const fallbackLookup = async () => {
+      const { data: listData, error: listError } = await supabase
+        .from("products")
+        .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
+        .eq("is_active", true);
+
+      if (listError) {
+        console.error("Supabase error", listError.message);
+        return null;
+      }
+
+      return (
+        listData?.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+      );
+    };
+
     const { data, error } = await supabase
       .from("products")
       .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
@@ -113,8 +129,10 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
 
     if (error) {
       console.error("Supabase error", error.message);
+      const fallback = await fallbackLookup();
       return (
-        fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
+        fallback ??
+        (fallbackProducts.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null)
       );
     }
 
@@ -122,19 +140,7 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
       return data;
     }
 
-    const { data: allData, error: listError } = await supabase
-      .from("products")
-      .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
-      .eq("is_active", true);
-
-    if (listError) {
-      console.error("Supabase error", listError.message);
-      return null;
-    }
-
-    return (
-      allData?.find((product) => normalizeSlug(product.slug) === normalizedSlug) ?? null
-    );
+    return await fallbackLookup();
   } catch (error) {
     console.error("Supabase error", error);
     return (
