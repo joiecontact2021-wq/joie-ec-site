@@ -35,6 +35,7 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,14 +58,18 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
     fetchProducts();
   }, []);
 
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = async (file: File, productId?: string) => {
     if (!file) return;
     if (file.type !== "image/jpeg") {
       setError("JPEG画像のみアップロードできます。");
       return;
     }
 
-    setUploading(true);
+    if (productId) {
+      setUploadingId(productId);
+    } else {
+      setUploading(true);
+    }
     setError(null);
     setMessage(null);
 
@@ -90,12 +95,21 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
         throw new Error("画像URLの取得に失敗しました。");
       }
 
-      setDraft((prev) => ({ ...prev, image_url: data.publicUrl }));
-      setMessage("画像をアップロードしました。");
+      if (productId) {
+        await handleUpdate(productId, { image_url: data.publicUrl });
+        setMessage("画像を更新しました。");
+      } else {
+        setDraft((prev) => ({ ...prev, image_url: data.publicUrl }));
+        setMessage("画像をアップロードしました。");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "アップロードに失敗しました");
     } finally {
-      setUploading(false);
+      if (productId) {
+        setUploadingId(null);
+      } else {
+        setUploading(false);
+      }
     }
   };
 
@@ -331,6 +345,24 @@ export const AdminProducts = ({ userEmail }: { userEmail: string }) => {
                   onBlur={(event) => handleUpdate(product.id, { stock: event.target.value })}
                   className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
                 />
+              </label>
+              <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50 md:col-span-2">
+                商品画像 (JPEG)
+                <input
+                  type="file"
+                  accept="image/jpeg"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) handleImageUpload(file, product.id);
+                  }}
+                  className="mt-2 w-full rounded-2xl border border-joie-mist/70 bg-white/70 px-4 py-3 text-sm"
+                />
+                <p className="mt-2 text-[11px] tracking-[0.18em] text-joie-text/50">
+                  JPEGのみ対応。アップロード後に自動で画像URLが更新されます。
+                </p>
+                {uploadingId === product.id ? (
+                  <p className="mt-2 text-[11px] tracking-[0.18em] text-joie-text/60">アップロード中...</p>
+                ) : null}
               </label>
               <label className="text-xs uppercase tracking-[0.3em] text-joie-text/50 md:col-span-2">
                 画像URL

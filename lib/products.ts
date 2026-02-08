@@ -97,12 +97,12 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
 
     if (error) {
       console.error("Supabase error", error.message);
-      return null;
+      return fallbackProducts.find((product) => product.slug === slug) ?? null;
     }
 
     return data ?? null;
   } catch (error) {
     console.error("Supabase error", error);
-    return null;
+    return fallbackProducts.find((product) => product.slug === slug) ?? null;
   }
 };
