@@ -107,6 +107,8 @@ export const getProductBySlug = async (slug: string): Promise<Product | null> =>
       .select("id,name,slug,price,description,image_url,category,stock,is_active,sort_order")
       .eq("slug", normalizedSlug)
       .eq("is_active", true)
+      .order("created_at", { ascending: false })
+      .limit(1)
       .maybeSingle();
 
     if (error) {
