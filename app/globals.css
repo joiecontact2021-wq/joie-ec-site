@@ -3,11 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --joie-bg: #ffffff;
+  --joie-bg: #f7f2ea;
   --joie-text: #111111;
   --joie-accent: #111111;
   --joie-mist: #efefef;
   --joie-ink: #111111;
+}
+
+.campaign-text {
+  color: #c1121f;
 }
 
 body {

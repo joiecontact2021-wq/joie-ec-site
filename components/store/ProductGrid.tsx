@@ -105,7 +105,7 @@ export const ProductGrid = ({ products }: { products: Product[] }) => {
                   <span className="text-joie-text/40 line-through">
                     {formatJPY(product.price)}
                   </span>
-                  <span className="text-[10px] text-joie-text/50">キャンペーン中</span>
+                  <span className="campaign-text text-[10px]">キャンペーン中</span>
                 </div>
               ) : (
                 <p className="text-[10.5px] tracking-[0.18em] text-joie-text/60 sm:text-[11.5px]">

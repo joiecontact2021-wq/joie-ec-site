@@ -52,7 +52,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
               <span className="text-xs text-joie-text/40 line-through">
                 {formatJPY(product.price)}
               </span>
-              <span className="text-[10px] tracking-[0.2em] text-joie-text/50">キャンペーン中</span>
+              <span className="campaign-text text-[10px] tracking-[0.2em]">キャンペーン中</span>
             </>
           ) : null}
         </div>
