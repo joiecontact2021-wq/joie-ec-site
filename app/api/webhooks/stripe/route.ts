@@ -142,7 +142,11 @@ export async function POST(request: Request) {
 
   const total = session.amount_total ? formatJPY(session.amount_total) : "";
   const customer = session.customer_details;
-  const shipping = session.collected_information?.shipping_details ?? null;
+  const shipping = session.collected_information?.shipping_details ?? session.shipping_details ?? null;
+  const couponCode = session.metadata?.coupon_code;
+  const shippingFee = session.metadata?.shipping_fee
+    ? `送料: ¥ ${Number(session.metadata.shipping_fee).toLocaleString("ja-JP")}`
+    : null;
 
   const header = `新しい注文が入りました${total ? ` (${total})` : ""}`;
   const customerInfo = [
@@ -165,7 +169,15 @@ export async function POST(request: Request) {
         .join(" ")}`
     : "";
 
-  const slackMessage = [header, lineSummary, customerInfo, shippingInfo]
+  const slackMessage = [
+    header,
+    `注文ID: ${session.id}`,
+    lineSummary,
+    customerInfo,
+    shippingInfo,
+    couponCode ? `クーポン: ${couponCode}` : null,
+    shippingFee,
+  ]
     .filter(Boolean)
     .join("\n");
 
@@ -175,9 +187,12 @@ export async function POST(request: Request) {
       "joie | 新しい注文が入りました",
       `
         <h2>${header}</h2>
+        <p>注文ID: ${session.id}</p>
         <pre>${lineSummary}</pre>
         ${customerInfo ? `<p>${customerInfo.replace(/\n/g, "<br/>")}</p>` : ""}
         ${shippingInfo ? `<p>${shippingInfo}</p>` : ""}
+        ${couponCode ? `<p>クーポン: ${couponCode}</p>` : ""}
+        ${shippingFee ? `<p>${shippingFee}</p>` : ""}
       `
     ),
   ]);

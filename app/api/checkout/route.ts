@@ -108,6 +108,8 @@ export async function POST(request: Request) {
       discounts: stripeCouponId ? [{ coupon: stripeCouponId }] : undefined,
       metadata: {
         items: JSON.stringify(items),
+        coupon_code: couponCode || "",
+        shipping_fee: String(shippingFee),
       },
     });
 
