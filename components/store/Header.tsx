@@ -9,13 +9,13 @@ export const Header = () => {
 
   return (
     <header className="border-b border-black/30 bg-white pt-24 pb-4 sm:pt-[140px]">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-6">
-        <div className="font-ui text-[12px] uppercase tracking-[0.4em] text-joie-text/70 sm:text-[13px]">
-          joie online shop
+      <div className="relative mx-auto flex max-w-[1100px] items-center justify-center px-6">
+        <div className="font-ui text-[15px] font-bold uppercase tracking-[0.6em] text-joie-text sm:text-[18px]">
+          JOIE ONLINE SHOP
         </div>
         <Link
           href="/cart"
-          className="cart-button relative"
+          className="cart-button relative absolute right-6"
           aria-label="Cart"
         >
           <ShoppingCart className="h-5 w-5 text-white" />
