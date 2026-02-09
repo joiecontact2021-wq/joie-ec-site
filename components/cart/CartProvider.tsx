@@ -5,11 +5,15 @@ import type { CartItem, Product } from "@/lib/types";
 import { clamp } from "@/lib/utils";
 
 const STORAGE_KEY = "joie_cart";
+const COUPON_KEY = "joie_coupon";
 
 type CartContextValue = {
   items: CartItem[];
   totalQuantity: number;
   subtotal: number;
+  couponCode: string;
+  setCouponCode: (value: string) => void;
+  clearCouponCode: () => void;
   addItem: (product: Product, quantity?: number) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
@@ -20,6 +24,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [couponCode, setCouponCodeState] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -33,6 +38,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setItems([]);
       }
     }
+    const storedCoupon = window.localStorage.getItem(COUPON_KEY);
+    if (storedCoupon) {
+      setCouponCodeState(storedCoupon);
+    }
     setHydrated(true);
   }, []);
 
@@ -40,6 +49,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!hydrated) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [hydrated, items]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (couponCode) {
+      window.localStorage.setItem(COUPON_KEY, couponCode);
+    } else {
+      window.localStorage.removeItem(COUPON_KEY);
+    }
+  }, [hydrated, couponCode]);
 
   const totalQuantity = useMemo(
     () => items.reduce((sum, item) => sum + item.quantity, 0),
@@ -93,9 +111,26 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clear = () => setItems([]);
 
+  const setCouponCode = (value: string) => {
+    setCouponCodeState(value.trim().toUpperCase());
+  };
+
+  const clearCouponCode = () => setCouponCodeState("");
+
   const value = useMemo(
-    () => ({ items, totalQuantity, subtotal, addItem, updateQuantity, removeItem, clear }),
-    [items, totalQuantity, subtotal]
+    () => ({
+      items,
+      totalQuantity,
+      subtotal,
+      couponCode,
+      setCouponCode,
+      clearCouponCode,
+      addItem,
+      updateQuantity,
+      removeItem,
+      clear,
+    }),
+    [items, totalQuantity, subtotal, couponCode]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

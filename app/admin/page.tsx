@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { requireAdminUser } from "@/lib/auth";
 import { AdminProducts } from "@/components/admin/AdminProducts";
+import { AdminCoupons } from "@/components/admin/AdminCoupons";
 
 export default async function AdminPage() {
   const { user } = await requireAdminUser();
@@ -19,6 +20,7 @@ export default async function AdminPage() {
         </p>
       </div>
       <AdminProducts userEmail={user.email ?? ""} />
+      <AdminCoupons />
     </div>
   );
 }

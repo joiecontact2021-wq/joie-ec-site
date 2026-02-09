@@ -11,6 +11,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const items = Array.isArray(body?.items) ? (body.items as CartItemPayload[]) : [];
+    const couponCode = String(body?.coupon_code ?? "")
+      .trim()
+      .toUpperCase();
 
     if (items.length === 0) {
       return NextResponse.json({ error: "カートが空です。" }, { status: 400 });
@@ -52,6 +55,23 @@ export async function POST(request: Request) {
       };
     });
 
+    let stripeCouponId: string | null = null;
+    if (couponCode) {
+      const { data: coupon, error: couponError } = await admin
+        .from("coupons")
+        .select("id,code,stripe_coupon_id,is_active")
+        .eq("code", couponCode)
+        .eq("is_active", true)
+        .maybeSingle();
+      if (couponError) {
+        return NextResponse.json({ error: couponError.message }, { status: 500 });
+      }
+      if (!coupon?.stripe_coupon_id) {
+        return NextResponse.json({ error: "クーポンコードが無効です。" }, { status: 400 });
+      }
+      stripeCouponId = coupon.stripe_coupon_id;
+    }
+
     const stripe = getStripeClient();
     const origin =
       request.headers.get("origin") ||
@@ -69,6 +89,7 @@ export async function POST(request: Request) {
         ? { allowed_countries: ["JP"] }
         : undefined,
       phone_number_collection: shippingRequired ? { enabled: true } : undefined,
+      discounts: stripeCouponId ? [{ coupon: stripeCouponId }] : undefined,
       metadata: {
         items: JSON.stringify(items),
       },

@@ -147,20 +147,22 @@ export default async function ProductPage({
         / {product.name}
       </nav>
 
-      <div className="grid gap-10 md:grid-cols-2">
-        <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">
-          {product.image_url ? (
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="h-full w-full object-contain"
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-joie-text/40">
-              No Image
-            </div>
-          )}
+      <div className="grid gap-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <div className="mx-auto w-full max-w-[420px]">
+          <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">
+            {product.image_url ? (
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="h-full w-full object-contain"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-joie-text/40">
+                No Image
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="space-y-5">

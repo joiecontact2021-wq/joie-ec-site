@@ -53,3 +53,17 @@ create table if not exists stripe_events (
 alter table stripe_events enable row level security;
 revoke all on table public.stripe_events from public;
 revoke all on table public.stripe_events from anon, authenticated;
+
+create table if not exists coupons (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null,
+  discount_type text not null check (discount_type in ('percent', 'amount')),
+  amount integer not null check (amount > 0),
+  stripe_coupon_id text not null,
+  is_active boolean default true,
+  created_at timestamptz default now()
+);
+
+alter table coupons enable row level security;
+revoke all on table public.coupons from public;
+revoke all on table public.coupons from anon, authenticated;

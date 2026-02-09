@@ -6,7 +6,7 @@ import { useCart } from "@/components/cart/CartProvider";
 import { formatJPY } from "@/lib/utils";
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem, clear } = useCart();
+  const { items, subtotal, updateQuantity, removeItem, clear, couponCode, setCouponCode, clearCouponCode } = useCart();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
@@ -19,6 +19,7 @@ export default function CartPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((item) => ({ id: item.id, quantity: item.quantity })),
+          coupon_code: couponCode || null,
         }),
       });
       const data = await response.json();
@@ -59,7 +60,7 @@ export default function CartPage() {
           <div className="space-y-6">
             {items.map((item) => (
               <div key={item.id} className="flex flex-col gap-4 border-b border-black/10 pb-6 md:flex-row md:items-center">
-                <div className="h-24 w-24 overflow-hidden bg-[#f4f4f4]">
+                <div className="h-12 w-12 overflow-hidden bg-[#f4f4f4]">
                   {item.image_url ? (
                     <img src={item.image_url} alt={item.name} className="h-full w-full object-contain" />
                   ) : null}
@@ -100,6 +101,26 @@ export default function CartPage() {
           </div>
 
           <div className="space-y-4 border border-black/20 p-6 text-[11px] tracking-[0.25em] text-joie-text/70">
+            <div className="space-y-2">
+              <span className="text-[10px] uppercase tracking-[0.35em] text-joie-text/60">
+                クーポンコード
+              </span>
+              <input
+                value={couponCode}
+                onChange={(event) => setCouponCode(event.target.value)}
+                placeholder="例: JOIE10"
+                className="w-full rounded-full border border-black/40 bg-white px-4 py-2 text-[11px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+              />
+              {couponCode ? (
+                <button
+                  type="button"
+                  onClick={clearCouponCode}
+                  className="text-[10px] uppercase tracking-[0.3em] text-joie-text/50"
+                >
+                  クーポンをクリア
+                </button>
+              ) : null}
+            </div>
             <div className="flex items-center justify-between">
               <span>小計</span>
               <span className="tracking-[0.1em]">{formatJPY(subtotal)}</span>

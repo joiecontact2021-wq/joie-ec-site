@@ -7,7 +7,7 @@ import { formatJPY } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 
 export const ProductActions = ({ product }: { product: Product }) => {
-  const { addItem } = useCart();
+  const { addItem, couponCode, setCouponCode } = useCart();
   const [buyNowLoading, setBuyNowLoading] = useState(false);
   const [buyNowError, setBuyNowError] = useState<string | null>(null);
   const hasDiscount = Boolean(
@@ -24,6 +24,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: [{ id: product.id, quantity: 1 }],
+          coupon_code: couponCode || null,
         }),
       });
       const data = await response.json();
@@ -60,7 +61,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
         <button
           type="button"
           onClick={() => addItem({ ...product, price: effectivePrice }, 1)}
-          className="flex-1 rounded-full border border-black bg-black px-5 py-3 text-[11px] tracking-[0.35em] text-white shadow-[0_10px_28px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.22)]"
+          className="flex-1 rounded-full border border-black bg-black px-6 py-4 text-[12px] tracking-[0.35em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(0,0,0,0.26)]"
         >
           カートに追加
         </button>
@@ -68,10 +69,21 @@ export const ProductActions = ({ product }: { product: Product }) => {
           type="button"
           onClick={handleBuyNow}
           disabled={buyNowLoading}
-          className="flex-1 rounded-full border border-black/50 bg-white px-5 py-3 text-[11px] tracking-[0.35em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60"
+          className="flex-1 rounded-full border border-black/50 bg-white px-6 py-4 text-[12px] tracking-[0.35em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60"
         >
           {buyNowLoading ? "購入処理中..." : "今すぐ購入"}
         </button>
+      </div>
+      <div className="space-y-2">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-joie-text/60">
+          クーポンコード
+        </p>
+        <input
+          value={couponCode}
+          onChange={(event) => setCouponCode(event.target.value)}
+          placeholder="例: JOIE10"
+          className="w-full rounded-full border border-black/40 bg-white px-4 py-3 text-[11px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+        />
       </div>
       {buyNowError ? (
         <p className="text-[11px] tracking-[0.18em] text-red-600">{buyNowError}</p>
