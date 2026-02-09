@@ -28,14 +28,51 @@ const parseItems = (session: Stripe.Checkout.Session) => {
   }
 };
 
-const postSlack = async (text: string) => {
+const postSlack = async (payload: { text: string; blocks?: unknown[] }) => {
   const url = process.env.SLACK_WEBHOOK_URL;
   if (!url) return;
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify(payload),
   });
+};
+
+const getLineTargets = () => {
+  const targets = [
+    process.env.LINE_USER_ID,
+    process.env.LINE_GROUP_ID,
+    process.env.LINE_ROOM_ID,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).trim());
+  const extra = (process.env.LINE_TARGET_IDS ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return Array.from(new Set([...targets, ...extra]));
+};
+
+const postLine = async (text: string) => {
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const targets = getLineTargets();
+  if (!token || targets.length === 0) return;
+
+  await Promise.all(
+    targets.map((to) =>
+      fetch("https://api.line.me/v2/bot/message/push", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to,
+          messages: [{ type: "text", text }],
+        }),
+      })
+    )
+  );
 };
 
 const postEmail = async (subject: string, html: string) => {
@@ -169,7 +206,51 @@ export async function POST(request: Request) {
         .join(" ")}`
     : "";
 
-  const slackMessage = [
+  const slackText = [
+    header,
+    `注文ID: ${session.id}`,
+    lineSummary,
+    customerInfo,
+    shippingInfo,
+    couponCode ? `クーポン: ${couponCode}` : null,
+    shippingFee,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const slackBlocks = [
+    {
+      type: "header",
+      text: { type: "plain_text", text: header, emoji: true },
+    },
+    {
+      type: "section",
+      fields: [
+        { type: "mrkdwn", text: `*注文ID*\n${session.id}` },
+        total ? { type: "mrkdwn", text: `*合計*\n${total}` } : null,
+        couponCode ? { type: "mrkdwn", text: `*クーポン*\n${couponCode}` } : null,
+        shippingFee ? { type: "mrkdwn", text: `*送料*\n${shippingFee.replace("送料: ", "")}` } : null,
+      ].filter(Boolean),
+    },
+    {
+      type: "section",
+      text: { type: "mrkdwn", text: `*商品*\n${lineSummary}` },
+    },
+    customerInfo
+      ? {
+          type: "section",
+          text: { type: "mrkdwn", text: `*購入者情報*\n${customerInfo}` },
+        }
+      : null,
+    shippingInfo
+      ? {
+          type: "section",
+          text: { type: "mrkdwn", text: `*配送先*\n${shippingInfo}` },
+        }
+      : null,
+  ].filter(Boolean);
+
+  const lineMessage = [
     header,
     `注文ID: ${session.id}`,
     lineSummary,
@@ -182,7 +263,8 @@ export async function POST(request: Request) {
     .join("\n");
 
   await Promise.all([
-    postSlack(slackMessage),
+    postSlack({ text: slackText, blocks: slackBlocks as unknown[] }),
+    postLine(lineMessage),
     postEmail(
       "joie | 新しい注文が入りました",
       `
