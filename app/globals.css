@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --joie-bg: #f7f2ea;
+  --joie-bg: #ffffff;
   --joie-text: #111111;
   --joie-accent: #111111;
   --joie-mist: #efefef;

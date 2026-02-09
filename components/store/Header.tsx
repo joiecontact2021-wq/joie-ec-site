@@ -10,7 +10,7 @@ export const Header = () => {
   return (
     <header className="border-b border-black/30 bg-white pt-24 pb-4 sm:pt-[140px]">
       <div className="relative mx-auto flex max-w-[1100px] items-center justify-end px-6">
-        <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 font-ui text-[15px] font-black uppercase tracking-[0.6em] text-joie-text sm:text-[18px]">
+        <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-center font-ui text-[15px] font-black uppercase tracking-[0.45em] text-joie-text sm:text-[18px]">
           JOIE ONLINE SHOP
         </div>
         <Link
