@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getActiveProducts, getProductById, getProductBySlug } from "@/lib/products";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { getShippingFee } from "@/lib/settings";
 import { ProductActions } from "@/components/store/ProductActions";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,8 @@ export default async function ProductPage({
 
   const fallbackId = isUuid(slugPart) ? slugPart : undefined;
   const requestedId = resolvedSearchParams?.id ?? idFromSlug ?? fallbackId;
+  const shippingFee = await getShippingFee();
+
   let product =
     (requestedId ? await getProductById(requestedId) : null) ??
     (await getProductBySlug(slugPart));
@@ -177,6 +180,7 @@ export default async function ProductPage({
           <div className="text-[11px] leading-relaxed text-joie-text/60">
             <p>配送目安: 3営業日以内に発送</p>
             <p>返品: 商品到着後7日以内にご連絡ください</p>
+            <p>送料: 全国一律 {shippingFee.toLocaleString("ja-JP")}円（数量に関係なく）</p>
           </div>
         </div>
       </div>

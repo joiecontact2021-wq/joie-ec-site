@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { getStripeClient } from "@/lib/stripe/server";
+import { getShippingFee } from "@/lib/settings";
 
 type CartItemPayload = {
   id: string;
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
     }
 
     const stripe = getStripeClient();
+    const shippingFee = await getShippingFee();
     const origin =
       request.headers.get("origin") ||
       process.env.NEXT_PUBLIC_SITE_URL ||
@@ -87,6 +89,20 @@ export async function POST(request: Request) {
       cancel_url: `${origin}/checkout/cancel`,
       shipping_address_collection: shippingRequired
         ? { allowed_countries: ["JP"] }
+        : undefined,
+      shipping_options: shippingRequired
+        ? [
+            {
+              shipping_rate_data: {
+                display_name: "全国一律送料",
+                type: "fixed_amount",
+                fixed_amount: {
+                  amount: shippingFee,
+                  currency: "jpy",
+                },
+              },
+            },
+          ]
         : undefined,
       phone_number_collection: shippingRequired ? { enabled: true } : undefined,
       discounts: stripeCouponId ? [{ coupon: stripeCouponId }] : undefined,

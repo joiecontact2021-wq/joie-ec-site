@@ -67,3 +67,13 @@ create table if not exists coupons (
 alter table coupons enable row level security;
 revoke all on table public.coupons from public;
 revoke all on table public.coupons from anon, authenticated;
+
+create table if not exists settings (
+  key text primary key,
+  value text not null,
+  updated_at timestamptz default now()
+);
+
+alter table settings enable row level security;
+revoke all on table public.settings from public;
+revoke all on table public.settings from anon, authenticated;
