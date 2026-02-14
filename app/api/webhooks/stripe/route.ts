@@ -179,7 +179,10 @@ export async function POST(request: Request) {
 
   const total = session.amount_total ? formatJPY(session.amount_total) : "";
   const customer = session.customer_details;
-  const shipping = session.collected_information?.shipping_details ?? session.shipping_details ?? null;
+  const shipping =
+    session.collected_information?.shipping_details ??
+    (session as { shipping_details?: { address?: { postal_code?: string | null; state?: string | null; city?: string | null; line1?: string | null; line2?: string | null } | null } }).shipping_details ??
+    null;
   const couponCode = session.metadata?.coupon_code;
   const shippingFee = session.metadata?.shipping_fee
     ? `送料: ¥ ${Number(session.metadata.shipping_fee).toLocaleString("ja-JP")}`
