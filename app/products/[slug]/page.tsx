@@ -173,7 +173,7 @@ export default async function ProductPage({
             {product.category || "Product"}
           </p>
           <h1 className="text-2xl tracking-[0.04em] text-joie-text">{product.name}</h1>
-          <p className="text-sm leading-relaxed text-joie-text/70">
+          <p className="text-sm leading-relaxed text-joie-text/70 whitespace-pre-line">
             {product.description || "丁寧につくられたヘアケアプロダクトです。"}
           </p>
           <ProductActions product={product} />
