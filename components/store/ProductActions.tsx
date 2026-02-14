@@ -57,11 +57,11 @@ export const ProductActions = ({ product }: { product: Product }) => {
           ) : null}
         </div>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
           type="button"
           onClick={() => addItem({ ...product, price: effectivePrice }, 1)}
-          className="flex-1 rounded-2xl border border-black bg-black px-8 py-5 text-[13px] tracking-[0.3em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(0,0,0,0.26)] sm:text-[14px]"
+          className="w-full rounded-2xl border border-black bg-black px-10 py-6 text-[13px] tracking-[0.3em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(0,0,0,0.26)] sm:w-[240px] sm:text-[14px]"
         >
           カートに追加
         </button>
@@ -69,7 +69,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           type="button"
           onClick={handleBuyNow}
           disabled={buyNowLoading}
-          className="flex-1 rounded-2xl border border-black/60 bg-white px-8 py-5 text-[13px] tracking-[0.3em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:text-[14px]"
+          className="w-full rounded-2xl border border-black/60 bg-white px-10 py-6 text-[13px] tracking-[0.3em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:w-[220px] sm:text-[14px]"
         >
           {buyNowLoading ? "購入処理中..." : "今すぐ購入"}
         </button>
@@ -82,7 +82,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           value={couponCode}
           onChange={(event) => setCouponCode(event.target.value)}
           placeholder="例: JOIE10"
-          className="w-full rounded-full border border-black/40 bg-white px-4 py-3 text-[11px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+          className="w-full rounded-2xl border border-black/40 bg-white px-5 py-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
         />
       </div>
       {buyNowError ? (
