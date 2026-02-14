@@ -61,7 +61,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
         <button
           type="button"
           onClick={() => addItem({ ...product, price: effectivePrice }, 1)}
-          className="h-[64px] w-full max-w-[320px] rounded-xl border border-black bg-black px-6 text-[13px] tracking-[0.25em] text-white shadow-[0_10px_24px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.22)] sm:text-[14px]"
+          className="h-[64px] w-full max-w-[320px] appearance-none rounded-xl border border-black bg-black px-6 text-[13px] tracking-[0.25em] text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_22px_rgba(0,0,0,0.22)] sm:text-[14px]"
         >
           カートに追加
         </button>
@@ -69,7 +69,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           type="button"
           onClick={handleBuyNow}
           disabled={buyNowLoading}
-          className="h-[64px] w-full max-w-[320px] rounded-xl border border-black/60 bg-white px-6 text-[13px] tracking-[0.25em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:text-[14px]"
+          className="h-[64px] w-full max-w-[320px] appearance-none rounded-xl border border-black/60 bg-white px-6 text-[13px] tracking-[0.25em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:text-[14px]"
         >
           {buyNowLoading ? "購入処理中..." : "今すぐ購入"}
         </button>
@@ -82,7 +82,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           value={couponCode}
           onChange={(event) => setCouponCode(event.target.value)}
           placeholder="例: JOIE10"
-          className="h-[56px] w-full max-w-[320px] rounded-xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+          className="h-[56px] w-full max-w-[320px] appearance-none rounded-xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
         />
       </div>
       {buyNowError ? (
@@ -90,7 +90,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
       ) : null}
       <Link
         href="/cart"
-        className="block text-center text-[10px] tracking-[0.25em] text-joie-text/50 hover:text-joie-text"
+        className="block text-center text-[12px] tracking-[0.2em] text-joie-text/60 hover:text-joie-text"
       >
         カートを見る
       </Link>

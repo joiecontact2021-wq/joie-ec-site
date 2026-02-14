@@ -52,7 +52,7 @@ export default function CartPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="max-w-[320px] border border-black/20 px-6 py-6 text-[14px] text-joie-text/70">
+        <div className="max-w-[300px] border border-black/20 px-6 py-4 text-[14px] text-joie-text/70">
           カートは空です。
         </div>
       ) : (
