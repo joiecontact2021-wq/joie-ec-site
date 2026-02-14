@@ -178,7 +178,7 @@ export default async function ProductPage({
           </p>
           <ProductActions product={product} />
           <div className="text-[11px] leading-relaxed text-joie-text/60">
-            <p>配送目安: 3営業日以内に発送</p>
+            <p>配送目安: 3営業日以内に発送いたします。</p>
             <p>返品: 商品到着後7日以内にご連絡ください</p>
             <p>送料: 全国一律 {shippingFee.toLocaleString("ja-JP")}円（数量に関係なく）</p>
           </div>
