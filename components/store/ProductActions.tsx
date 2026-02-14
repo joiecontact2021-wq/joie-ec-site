@@ -42,11 +42,11 @@ export const ProductActions = ({ product }: { product: Product }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-joie-text">
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2 text-joie-text">
         <span className="text-[10px] uppercase tracking-[0.35em] text-joie-text/60">価格</span>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="tracking-[0.04em]">{formatJPY(effectivePrice)}</span>
+        <div className="flex flex-wrap items-baseline gap-2">
+          <span className="text-[18px] tracking-[0.06em]">{formatJPY(effectivePrice)}</span>
           {hasDiscount ? (
             <>
               <span className="text-xs text-joie-text/40 line-through">
@@ -57,11 +57,11 @@ export const ProductActions = ({ product }: { product: Product }) => {
           ) : null}
         </div>
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <button
           type="button"
           onClick={() => addItem({ ...product, price: effectivePrice }, 1)}
-          className="h-[72px] w-full max-w-[240px] rounded-2xl border border-black bg-black px-6 text-[13px] tracking-[0.3em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.2)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(0,0,0,0.26)] sm:text-[14px]"
+          className="h-[64px] w-full max-w-[320px] rounded-xl border border-black bg-black px-6 text-[13px] tracking-[0.25em] text-white shadow-[0_10px_24px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.22)] sm:text-[14px]"
         >
           カートに追加
         </button>
@@ -69,7 +69,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           type="button"
           onClick={handleBuyNow}
           disabled={buyNowLoading}
-          className="h-[72px] w-full max-w-[220px] rounded-2xl border border-black/60 bg-white px-6 text-[13px] tracking-[0.3em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:text-[14px]"
+          className="h-[64px] w-full max-w-[320px] rounded-xl border border-black/60 bg-white px-6 text-[13px] tracking-[0.25em] text-joie-text transition duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white disabled:opacity-60 sm:text-[14px]"
         >
           {buyNowLoading ? "購入処理中..." : "今すぐ購入"}
         </button>
@@ -82,7 +82,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
           value={couponCode}
           onChange={(event) => setCouponCode(event.target.value)}
           placeholder="例: JOIE10"
-          className="h-16 w-full max-w-[320px] rounded-2xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+          className="h-[56px] w-full max-w-[320px] rounded-xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
         />
       </div>
       {buyNowError ? (

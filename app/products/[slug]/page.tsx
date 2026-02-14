@@ -150,9 +150,9 @@ export default async function ProductPage({
         / {product.name}
       </nav>
 
-      <div className="grid gap-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <div className="mx-auto w-full max-w-[420px]">
-          <div className="aspect-square w-full overflow-hidden bg-[#f8f8f8]">
+      <div className="grid gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <div className="mx-auto w-full max-w-[520px]">
+          <div className="aspect-square w-full overflow-hidden bg-[#f6f6f6]">
             {product.image_url ? (
               <img
                 src={product.image_url}
@@ -168,15 +168,17 @@ export default async function ProductPage({
           </div>
         </div>
 
-        <div className="space-y-5">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-joie-text/60">
+        <div className="space-y-6">
+          <p className="text-[10px] uppercase tracking-[0.45em] text-joie-text/60">
             {product.category || "Product"}
           </p>
-          <h1 className="text-2xl tracking-[0.04em] text-joie-text">{product.name}</h1>
-          <p className="text-sm leading-relaxed text-joie-text/70 whitespace-pre-line">
+          <h1 className="text-[28px] font-semibold tracking-[0.06em] text-joie-text">
+            {product.name}
+          </h1>
+          <ProductActions product={product} />
+          <p className="text-[14px] leading-7 text-joie-text/70 whitespace-pre-line">
             {product.description || "丁寧につくられたヘアケアプロダクトです。"}
           </p>
-          <ProductActions product={product} />
           <div className="text-[11px] leading-relaxed text-joie-text/60">
             <p>配送目安: 3営業日以内に発送いたします。</p>
             <p>返品: 商品到着後7日以内にご連絡ください</p>

@@ -52,7 +52,7 @@ export default function CartPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="min-h-[90px] max-w-[360px] border border-black/20 px-6 py-10 text-[13px] text-joie-text/60">
+        <div className="max-w-[320px] border border-black/20 px-6 py-6 text-[14px] text-joie-text/70">
           カートは空です。
         </div>
       ) : (
@@ -109,7 +109,7 @@ export default function CartPage() {
                 value={couponCode}
                 onChange={(event) => setCouponCode(event.target.value)}
                 placeholder="例: JOIE10"
-                className="h-16 w-full max-w-[280px] rounded-2xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
+                className="h-[56px] w-full max-w-[280px] rounded-xl border border-black/40 bg-white px-5 text-[12px] tracking-[0.2em] text-joie-text focus:outline-none focus:ring-2 focus:ring-black/20"
               />
               {couponCode ? (
                 <button
