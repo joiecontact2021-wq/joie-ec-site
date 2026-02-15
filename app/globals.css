@@ -68,7 +68,7 @@ button {
 
 .selectbox-5::after {
   position: absolute;
-  right: 15px;
+  left: calc(0.8em + 7em);
   width: 10px;
   height: 7px;
   background-color: #535353;
@@ -79,9 +79,9 @@ button {
 
 .selectbox-5 select {
   appearance: none;
-  min-width: 260px;
+  min-width: 150px;
   height: 3em;
-  padding: 0.4em calc(0.8em + 30px) 0.4em 0.8em;
+  padding: 0.4em 1.4em 0.4em 0.8em;
   border: none;
   border-bottom: 2px solid #333438;
   background-color: #fff;
