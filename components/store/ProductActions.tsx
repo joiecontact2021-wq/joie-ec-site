@@ -104,8 +104,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
                 </div>
               </div>
             </div>,
-            document.body
-          , modalRoot)
+            modalRoot)
         : null}
       <div className="flex flex-wrap items-baseline justify-between gap-2 text-joie-text">
         <span className="text-[10px] uppercase tracking-[0.35em] text-joie-text/60">価格</span>
