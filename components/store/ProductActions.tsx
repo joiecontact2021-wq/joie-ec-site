@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatJPY } from "@/lib/utils";
 import type { Product } from "@/lib/types";
@@ -10,10 +10,25 @@ export const ProductActions = ({ product }: { product: Product }) => {
   const { addItem, couponCode, setCouponCode } = useCart();
   const [buyNowLoading, setBuyNowLoading] = useState(false);
   const [buyNowError, setBuyNowError] = useState<string | null>(null);
+  const [showAdded, setShowAdded] = useState(false);
   const hasDiscount = Boolean(
     product.discount_price && product.discount_price > 0 && product.discount_price < product.price
   );
   const effectivePrice = hasDiscount ? product.discount_price! : product.price;
+
+  useEffect(() => {
+    if (!showAdded) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [showAdded]);
+
+  const handleAddToCart = () => {
+    addItem({ ...product, price: effectivePrice }, 1);
+    setShowAdded(true);
+  };
 
   const handleBuyNow = async () => {
     setBuyNowLoading(true);
@@ -43,6 +58,47 @@ export const ProductActions = ({ product }: { product: Product }) => {
 
   return (
     <div className="space-y-5">
+      {showAdded ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5"
+          onClick={() => setShowAdded(false)}
+        >
+          <div
+            className="relative w-full max-w-[420px] rounded-xl border border-black/30 bg-white p-6 text-center shadow-[0_14px_40px_rgba(0,0,0,0.25)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowAdded(false)}
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center text-xl text-joie-text/60 hover:text-joie-text"
+              aria-label="閉じる"
+            >
+              ×
+            </button>
+            <p className="text-[14px] tracking-[0.18em] text-joie-text">
+              カートに追加しました。
+            </p>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAdded(false)}
+                className="h-11 w-full rounded-lg border border-black/30 bg-white px-4 text-[12px] tracking-[0.2em] text-joie-text"
+              >
+                お買い物を続ける
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = "/cart";
+                }}
+                className="h-11 w-full rounded-lg border border-black bg-black px-4 text-[12px] tracking-[0.2em] text-white"
+              >
+                カートへ進む
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-baseline justify-between gap-2 text-joie-text">
         <span className="text-[10px] uppercase tracking-[0.35em] text-joie-text/60">価格</span>
         <div className="flex flex-wrap items-baseline gap-2">
@@ -60,7 +116,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <button
           type="button"
-          onClick={() => addItem({ ...product, price: effectivePrice }, 1)}
+          onClick={handleAddToCart}
           className="h-[64px] w-full max-w-[320px] appearance-none rounded-xl border border-black bg-black px-6 text-[13px] tracking-[0.25em] text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_22px_rgba(0,0,0,0.22)] sm:text-[14px]"
         >
           カートに追加
