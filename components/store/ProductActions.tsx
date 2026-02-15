@@ -21,15 +21,6 @@ export const ProductActions = ({ product }: { product: Product }) => {
   const canRenderModal = showAdded && portalReady;
 
   useEffect(() => {
-    if (!canRenderModal) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [canRenderModal]);
-
-  useEffect(() => {
     setPortalReady(true);
   }, []);
 
@@ -69,7 +60,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
       {canRenderModal
         ? createPortal(
             <div
-              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-5"
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-5"
               onClick={() => setShowAdded(false)}
             >
               <div
