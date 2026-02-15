@@ -45,8 +45,8 @@ export async function PATCH(request: Request) {
 
   if (key === "shipping_fee") {
     const fee = normalizeShippingFee(body?.value);
-    if (!fee) {
-      return NextResponse.json({ error: "送料は1以上の数字で入力してください。" }, { status: 400 });
+    if (fee === null) {
+      return NextResponse.json({ error: "送料は0以上の数字で入力してください。" }, { status: 400 });
     }
     const admin = createAdminSupabaseClient();
     const { data, error: updateError } = await admin

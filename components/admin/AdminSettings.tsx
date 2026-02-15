@@ -15,8 +15,8 @@ export const AdminSettings = () => {
       const response = await fetch("/api/admin/settings?key=shipping_fee");
       const data = await response.json();
       if (!response.ok) throw new Error(data?.error || "Failed to load");
-      if (data?.data?.value) {
-        setShippingFee(data.data.value);
+      if (data?.data?.value !== null && data?.data?.value !== undefined) {
+        setShippingFee(String(data.data.value));
       } else {
         setShippingFee("600");
       }
