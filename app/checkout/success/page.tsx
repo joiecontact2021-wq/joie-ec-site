@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CheckoutSuccessClient } from "@/components/checkout/CheckoutSuccessClient";
 
 export default function CheckoutSuccessPage() {
@@ -10,12 +9,15 @@ export default function CheckoutSuccessPage() {
       <p className="text-sm leading-relaxed text-joie-text/70">
         ご注文内容を確認後、通常3営業日以内に発送いたします。メールが届かない場合はお問い合わせください。
       </p>
-      <Link
-        href="/"
+      <button
+        type="button"
+        onClick={() => {
+          window.location.href = "/";
+        }}
         className="inline-flex border border-black bg-black px-6 py-2 text-[11px] uppercase tracking-[0.35em] text-white"
       >
         Back to Home
-      </Link>
+      </button>
     </div>
   );
 }
