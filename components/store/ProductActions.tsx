@@ -18,14 +18,16 @@ export const ProductActions = ({ product }: { product: Product }) => {
   );
   const effectivePrice = hasDiscount ? product.discount_price! : product.price;
 
+  const canRenderModal = showAdded && portalReady;
+
   useEffect(() => {
-    if (!showAdded) return;
+    if (!canRenderModal) return;
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = original;
     };
-  }, [showAdded]);
+  }, [canRenderModal]);
 
   useEffect(() => {
     setPortalReady(true);
@@ -64,7 +66,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
 
   return (
     <div className="space-y-5">
-      {showAdded && portalReady
+      {canRenderModal
         ? createPortal(
             <div
               className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-5"
