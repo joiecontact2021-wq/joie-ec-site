@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatJPY } from "@/lib/utils";
@@ -12,17 +12,13 @@ export const ProductActions = ({ product }: { product: Product }) => {
   const [buyNowLoading, setBuyNowLoading] = useState(false);
   const [buyNowError, setBuyNowError] = useState<string | null>(null);
   const [showAdded, setShowAdded] = useState(false);
-  const [portalReady, setPortalReady] = useState(false);
+  const modalRoot = useMemo(() => (typeof document !== "undefined" ? document.body : null), []);
   const hasDiscount = Boolean(
     product.discount_price && product.discount_price > 0 && product.discount_price < product.price
   );
   const effectivePrice = hasDiscount ? product.discount_price! : product.price;
 
-  const canRenderModal = showAdded && portalReady;
-
-  useEffect(() => {
-    setPortalReady(true);
-  }, []);
+  const canRenderModal = showAdded && Boolean(modalRoot);
 
   const handleAddToCart = () => {
     addItem({ ...product, price: effectivePrice }, 1);
@@ -57,10 +53,20 @@ export const ProductActions = ({ product }: { product: Product }) => {
 
   return (
     <div className="space-y-5">
-      {canRenderModal
+      {canRenderModal && modalRoot
         ? createPortal(
             <div
               className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-5"
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9999,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(0,0,0,0.4)",
+                padding: "20px",
+              }}
               onClick={() => setShowAdded(false)}
             >
               <div
@@ -99,7 +105,7 @@ export const ProductActions = ({ product }: { product: Product }) => {
               </div>
             </div>,
             document.body
-          )
+          , modalRoot)
         : null}
       <div className="flex flex-wrap items-baseline justify-between gap-2 text-joie-text">
         <span className="text-[10px] uppercase tracking-[0.35em] text-joie-text/60">価格</span>

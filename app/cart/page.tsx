@@ -92,7 +92,7 @@ export default function CartPage() {
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="text-[10px] uppercase tracking-[0.3em] text-joie-text/40"
+                  className="h-10 min-w-[80px] rounded-full border border-black/30 px-3 text-[10px] uppercase tracking-[0.25em] text-joie-text/60"
                 >
                   削除
                 </button>
@@ -137,7 +137,7 @@ export default function CartPage() {
               type="button"
               onClick={handleCheckout}
               disabled={checkoutLoading || items.length === 0}
-              className="w-full border border-black bg-black px-4 py-2 text-[11px] uppercase tracking-[0.35em] text-white transition hover:opacity-90 disabled:opacity-50"
+              className="h-[52px] w-full rounded-xl border border-black bg-black px-4 text-[12px] uppercase tracking-[0.3em] text-white transition hover:opacity-90 disabled:opacity-50"
             >
               {checkoutLoading ? "決済へ移動中..." : "購入手続きへ"}
             </button>
@@ -147,7 +147,7 @@ export default function CartPage() {
             <button
               type="button"
               onClick={clear}
-              className="w-full text-center text-[10px] uppercase tracking-[0.3em] text-joie-text/40"
+              className="h-[52px] w-full rounded-xl border border-black/40 px-4 text-center text-[12px] uppercase tracking-[0.3em] text-joie-text/60"
             >
               カートを空にする
             </button>
