@@ -91,7 +91,7 @@ export async function PATCH(
   }
 
   if (body?.sort_order !== undefined) {
-    updates.sort_order = parseInteger(body.sort_order) ?? 0;
+    updates.sort_order = parseInteger(body.sort_order);
   }
 
   const admin = createAdminSupabaseClient();

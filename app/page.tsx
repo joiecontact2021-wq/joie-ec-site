@@ -2,6 +2,8 @@ import { getActiveProducts } from "@/lib/products";
 import { ProductGrid } from "@/components/store/ProductGrid";
 import { InfoMenu } from "@/components/store/InfoMenu";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const products = await getActiveProducts();
 

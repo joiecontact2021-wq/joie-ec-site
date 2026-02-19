@@ -32,7 +32,7 @@ export async function GET() {
   const { data, error: fetchError } = await admin
     .from("products")
     .select("id,name,slug,price,discount_price,description,image_url,category,stock,is_active,sort_order")
-    .order("sort_order", { ascending: true })
+    .order("sort_order", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: false });
 
   if (fetchError) {
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     category: String(body?.category ?? "").trim() || null,
     stock: parseInteger(body?.stock),
     is_active: Boolean(body?.is_active ?? true),
-    sort_order: parseInteger(body?.sort_order) ?? 0,
+    sort_order: parseInteger(body?.sort_order),
   };
 
   const admin = createAdminSupabaseClient();

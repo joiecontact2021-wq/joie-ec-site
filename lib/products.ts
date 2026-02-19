@@ -95,7 +95,7 @@ export const getActiveProducts = async (): Promise<Product[]> => {
         .from("products")
         .select(selectFields)
         .eq("is_active", true)
-        .order("sort_order", { ascending: true })
+        .order("sort_order", { ascending: true, nullsFirst: false })
         .order("created_at", { ascending: false });
       if (!adminError && adminData) {
         return adminData;
@@ -110,7 +110,7 @@ export const getActiveProducts = async (): Promise<Product[]> => {
       .from("products")
       .select(selectFields)
       .eq("is_active", true)
-      .order("sort_order", { ascending: true })
+      .order("sort_order", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -121,7 +121,7 @@ export const getActiveProducts = async (): Promise<Product[]> => {
         .from("products")
         .select(selectFields)
         .eq("is_active", true)
-        .order("sort_order", { ascending: true })
+        .order("sort_order", { ascending: true, nullsFirst: false })
         .order("created_at", { ascending: false });
       if (adminError) {
         console.error("Supabase admin error", adminError.message);
@@ -139,7 +139,7 @@ export const getActiveProducts = async (): Promise<Product[]> => {
       .from("products")
       .select(selectFields)
       .eq("is_active", true)
-      .order("sort_order", { ascending: true })
+      .order("sort_order", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false });
     if (adminError) {
       console.error("Supabase admin error", adminError.message);
